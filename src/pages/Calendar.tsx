@@ -53,7 +53,7 @@ export default function Calendar() {
   }
 
   return (
-    <div className="panel p-4 h-full">
+    <div className="panel p-4 h-[calc(100vh-7.5rem)] min-h-[520px]">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
