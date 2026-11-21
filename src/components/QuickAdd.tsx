@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { MetalFx } from 'metal-fx'
-import { BorderBeam } from 'border-beam'
-import { Mic } from 'lucide-react'
+import { Mic, Plus, Square } from 'lucide-react'
 import { useMode } from "../lib/theme"
 import { apply, describe, parseCommand, transcribe, valid, type Action } from '../lib/quickadd'
 import Thinking from './Thinking'
@@ -83,39 +82,57 @@ export default function QuickAdd() {
       </MetalFx>
     </div>
 
-    {open && <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-start justify-center pt-[15vh] p-4" onMouseDown={e => e.target === e.currentTarget && close()}>
-      <BorderBeam theme={resolved} size="md" colorVariant="colorful" active={!!rec || status === 'Understanding…'} className="w-full max-w-lg">
-      <div className="panel w-full p-5 space-y-3 shadow-2xl">
-        <form className="flex gap-2" onSubmit={e => { e.preventDefault(); understand(text) }}>
-          <button type="button" onClick={toggleMic} aria-label={rec ? 'Stop recording' : 'Speak'}
-            className={`w-11 h-11 shrink-0 rounded-full text-xl transition ${rec ? 'bg-red-500 text-white animate-pulse' : 'bg-[var(--line)] hover:bg-[var(--accent)] hover:text-white'}`}>{rec ? '■' : <Mic size={20} />}</button>
-          <input ref={input} className="input !text-base" value={text} onChange={e => setText(e.target.value)}
-            placeholder="“Chemistry homework Thursday 4pm” · “add milk and eggs”" />
-          <button className="btn" disabled={!text.trim() || !!rec}>Go</button>
+    {open && <div className="fixed inset-0 z-50 bg-black/35 backdrop-blur-[3px] flex items-start justify-center pt-[14vh] p-4" onMouseDown={e => e.target === e.currentTarget && close()}>
+      <div className="w-full max-w-xl rounded-[20px] overflow-hidden border border-[var(--line)] shadow-[0_30px_80px_-20px_rgba(0,0,0,.55)]"
+        style={{ background: 'var(--panel)', backdropFilter: 'blur(30px) saturate(1.4)' }}>
+        <form className="flex items-center gap-3 px-5 h-16" onSubmit={e => { e.preventDefault(); understand(text) }}>
+          <Plus size={22} className="muted shrink-0" strokeWidth={2.2} />
+          <input ref={input} className="flex-1 min-w-0 bg-transparent outline-none text-[19px] placeholder:text-[var(--muted)]" value={text}
+            onChange={e => setText(e.target.value)} placeholder="Add something…" />
+          <button type="button" onClick={toggleMic} aria-label={rec ? 'Stop recording' : 'Speak'} title={rec ? 'Stop' : 'Speak'}
+            className={`w-9 h-9 shrink-0 rounded-full grid place-items-center transition ${rec ? 'bg-red-500 text-white' : 'muted hover:bg-[var(--line)] hover:text-[var(--text)]'}`}>
+            {rec ? <Square size={14} fill="currentColor" /> : <Mic size={19} />}
+          </button>
         </form>
 
-        {status && <p className="text-sm muted">{status.endsWith('…') || status.includes('Listening') ? <Thinking state={rec ? 'listening' : 'working'} label={status} /> : status}</p>}
-        {saved && <p className="text-sm text-green-500 font-medium">{saved}</p>}
+        {(status || saved || actions || !text) && <div className="border-t border-[var(--line)] px-5 py-4 space-y-3">
+          {status && <p className="text-sm muted">{status.endsWith('…') || status.includes('Listening') ? <Thinking state={rec ? 'listening' : 'working'} label={status} /> : status}</p>}
+          {saved && <p className="text-sm text-green-500 font-medium">{saved}</p>}
 
-        {actions && <>
-          <div className="text-sm muted">I’ll add:</div>
-          <div className="space-y-1.5">
-            {actions.map((x, i) => (
-              <label key={i} className={`flex items-center gap-3 p-2.5 rounded-xl border border-[var(--line)] cursor-pointer ${x.on ? '' : 'opacity-50'}`}>
-                <input type="checkbox" className="w-4 h-4 accent-[var(--accent)]" checked={x.on}
-                  onChange={() => setActions(actions.map((y, j) => (j === i ? { ...y, on: !y.on } : y)))} />
-                <span className="text-sm">{describe(x.a)}</span>
-              </label>
-            ))}
-          </div>
-          <div className="flex gap-2 justify-end">
-            <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)]" onClick={reset}>Start over</button>
-            <button className="btn" onClick={save} disabled={!actions.some(x => x.on)}>Add</button>
-          </div>
-        </>}
-        {!actions && !status && !saved && <p className="text-xs muted">Events, shopping, meals, or “I don’t get … in Physics” for the weekend recap. Ctrl+K anywhere.</p>}
+          {actions && <>
+            <div className="space-y-1">
+              {actions.map((x, i) => (
+                <label key={i} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-[var(--line)] transition ${x.on ? '' : 'opacity-45'}`}>
+                  <input type="checkbox" className="w-4 h-4 accent-[var(--accent)]" checked={x.on}
+                    onChange={() => setActions(actions.map((y, j) => (j === i ? { ...y, on: !y.on } : y)))} />
+                  <span className="text-[15px]">{describe(x.a)}</span>
+                </label>
+              ))}
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button className="px-3 py-1.5 rounded-lg text-sm hover:bg-[var(--line)]" onClick={reset}>Start over</button>
+              <button className="btn" onClick={save} disabled={!actions.some(x => x.on)}>Add</button>
+            </div>
+          </>}
+
+          {!actions && !status && !saved && <>
+            <div className="text-[11px] font-semibold uppercase tracking-wider muted">Try</div>
+            <div className="flex flex-wrap gap-2">
+              {['Chemistry homework Thursday 4pm', 'Add milk and eggs', 'Pasta for dinner tomorrow', 'I don’t get moles in Chemistry'].map(t => (
+                <button key={t} type="button" onClick={() => { setText(t); input.current?.focus() }}
+                  className="text-sm px-3 py-1.5 rounded-full border border-[var(--line)] hover:bg-[var(--line)] transition">{t}</button>
+              ))}
+            </div>
+          </>}
+        </div>}
+
+        <div className="flex items-center gap-4 px-5 py-2.5 text-[11px] muted border-t border-[var(--line)]">
+          <span><Kbd>↵</Kbd> to add</span><span><Kbd>esc</Kbd> to close</span><span className="ml-auto"><Kbd>Ctrl</Kbd> <Kbd>K</Kbd> anywhere</span>
+        </div>
       </div>
-      </BorderBeam>
     </div>}
   </>
 }
+
+const Kbd = ({ children }: { children: React.ReactNode }) =>
+  <kbd className="inline-grid place-items-center min-w-5 h-5 px-1.5 rounded-md border border-[var(--line)] font-sans text-[10px] font-semibold">{children}</kbd>
