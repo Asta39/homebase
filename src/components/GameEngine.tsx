@@ -49,8 +49,8 @@ async function award(g: GameState) {
   g.achievements.forEach(a => { for (let t = 1; t <= a.tier; t++) give(`tier:${a.id}:${t}`, TIER_GEMS[t - 1], 0, `${a.title} · ${TIER_NAMES[t - 1]}`) })
   // Habits: streak milestones (gems), growth stages, and a perfect habit day
   g.habitStatList.forEach(h => {
-    STREAK_MILESTONES.filter(m => h.streak >= m.days).forEach(m => give(`hstreak:${h.habit.id}:${m.days}`, m.gems, 0, `${h.habit.icon} ${h.habit.name} · ${m.days}-day streak`))
-    for (let i = 1; i <= h.level.index; i++) give(`hlevel:${h.habit.id}:${i}`, 5, 0, `${h.habit.icon} ${h.habit.name} grew into a ${HABIT_LEVELS[i].name} ${HABIT_LEVELS[i].icon}`)
+    STREAK_MILESTONES.filter(m => h.streak >= m.days).forEach(m => give(`hstreak:${h.habit.id}:${m.days}`, m.gems, 0, `${h.habit.name} · ${m.days}-day streak`))
+    for (let i = 1; i <= h.level.index; i++) give(`hlevel:${h.habit.id}:${i}`, 5, 0, `${h.habit.name} grew into a ${HABIT_LEVELS[i].name}`)
   })
   const dueToday = g.habitStatList.filter(h => h.dueToday)
   if (dueToday.length >= 2 && dueToday.every(h => h.doneToday)) give(`hperfect:${g.today}`, 5, 0, 'Perfect habit day')

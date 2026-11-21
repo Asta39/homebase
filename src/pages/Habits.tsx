@@ -4,9 +4,13 @@ import { Check, Pencil, Plus, Trash2 } from 'lucide-react'
 import { db, type Habit } from '../lib/db'
 import { ymd } from '../lib/workout'
 import { toggleHabit, STARTER_HABITS } from '../lib/wellbeing'
-import { HABIT_COLORS, HABIT_LEVELS, SCHEDULES, habitStats, nextMilestone, perfectDays, scheduleLabel, scheduleOf, type HabitStat } from '../lib/habits'
+import { HABIT_COLORS, HABIT_ICONS, HABIT_LEVELS, iconFor, SCHEDULES, habitStats, nextMilestone, perfectDays, scheduleLabel, scheduleOf, type HabitStat } from '../lib/habits'
 import { XP_RULES } from '../lib/gamify'
 import { confirmBox, form } from '../components/Dialog'
+import HabitIcon from '../components/HabitIcon'
+
+const Img = ({ src, size }: { src: string; size: number }) =>
+  <img src={`${import.meta.env.BASE_URL}${src}.png`} alt="" style={{ width: size, height: size }} className="object-contain shrink-0" />
 
 const COLOR_NAMES = ['Orange', 'Pink', 'Green', 'Teal', 'Yellow', 'Rose', 'Sky', 'Mocha']
 const WEEKS = 26
@@ -38,14 +42,14 @@ export default function Habits() {
       extra: h ? { label: 'Delete', action: 'delete' } : undefined,
       fields: [
         { name: 'name', label: 'Habit', value: h?.name, placeholder: 'e.g. Stretch before bed', required: true },
-        { name: 'icon', label: 'Emoji', value: h?.icon ?? '✨' },
+        { name: 'icon', label: 'Icon', type: 'select', value: h ? iconFor(h.icon, h.name) : 'read', options: HABIT_ICONS.map(i => ({ value: i.key, label: i.label })) },
         { name: 'days', label: 'When', type: 'select', value: h ? scheduleOf(h) : 'daily', options: SCHEDULES.map(s => ({ value: s.value, label: s.label })) },
         { name: 'color', label: 'Colour', type: 'select', value: h?.color ?? HABIT_COLORS[habits.length % HABIT_COLORS.length], options: HABIT_COLORS.map((c, i) => ({ value: c, label: COLOR_NAMES[i] })) },
       ],
     })
     if (!v) return
     if (v._action === 'delete' && h) return remove(h)
-    const patch = { name: v.name.trim(), icon: v.icon.trim() || '✨', color: v.color, days: SCHEDULES.find(s => s.value === v.days)!.days }
+    const patch = { name: v.name.trim(), icon: v.icon, color: v.color, days: SCHEDULES.find(s => s.value === v.days)!.days }
     if (h) await db.habits.update(h.id!, patch)
     else await db.habits.add({ ...patch, order: habits.length, created: today })
   }
@@ -76,7 +80,7 @@ export default function Habits() {
           <p className="muted text-sm mt-0.5">
             {!habits.length ? 'Small things, every day. Start with one.'
               : !due.length ? 'Nothing due today. Enjoy the rest.'
-              : doneCount === due.length ? 'Perfect day! Every habit done. 🎉'
+              : doneCount === due.length ? 'Perfect day! Every habit done.'
               : `${due.length - doneCount} to go · +${XP_RULES.habit} XP each`}
           </p>
           <div className="flex gap-1.5 mt-3">
@@ -90,9 +94,9 @@ export default function Habits() {
           </div>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <Stat big={`${perfectStreak}`} label="perfect-day streak" icon="🔥" />
-          <Stat big={`${logs.length}`} label="check-ins" icon="✅" />
-          <Stat big={`${logs.length * XP_RULES.habit}`} label="XP from habits" icon="⭐" />
+          <Stat big={`${perfectStreak}`} label="perfect-day streak" icon="achievements/wildfire" />
+          <Stat big={`${logs.length}`} label="check-ins" icon="achievements/habits" />
+          <Stat big={`${logs.length * XP_RULES.habit}`} label="XP from habits" icon="achievements/sage" />
         </div>
       </section>
 
@@ -103,7 +107,7 @@ export default function Habits() {
           <button className="btn text-sm ml-auto flex items-center gap-1" onClick={() => edit()}><Plus size={16} /> Habit</button>
         </div>
         {!habits.length && <div className="panel p-6 text-center space-y-3">
-          <div className="text-4xl">🌱</div>
+          <HabitIcon name="stage-1" size={64} className="mx-auto" />
           <p className="muted text-sm">Each habit grows from a seed into an oak as you keep it up, and streaks earn gems.</p>
           <button className="btn text-sm" onClick={addStarters}>Add 3 suggestions</button>
         </div>}
@@ -112,7 +116,7 @@ export default function Habits() {
         </div>
         {resting.length > 0 && <div className="flex flex-wrap gap-2 pt-1 px-1 items-center">
           <span className="text-xs muted">Resting today:</span>
-          {resting.map(s => <span key={s.habit.id} className="text-xs px-2.5 py-1 rounded-full bg-[var(--line)]">{s.habit.icon} {s.habit.name}</span>)}
+          {resting.map(s => <span key={s.habit.id} className="text-xs pl-1 pr-2.5 py-0.5 rounded-full bg-[var(--line)] inline-flex items-center gap-1"><HabitIcon name={s.habit.icon} habitName={s.habit.name} size={18} />{s.habit.name}</span>)}
         </div>}
       </section>
 
@@ -120,7 +124,7 @@ export default function Habits() {
       {habits.length > 0 && <section className="space-y-2">
         <div className="flex items-baseline px-1 gap-2">
           <h2 className="font-semibold">Your garden</h2>
-          <span className="text-xs muted">{HABIT_LEVELS.map(l => l.icon).join(' → ')}</span>
+          <span className="flex items-center gap-0.5">{HABIT_LEVELS.map(l => <HabitIcon key={l.icon} name={l.icon} size={20} />)}</span>
         </div>
         <div className="grid gap-3 lg:grid-cols-2">
           {stats.map(s => <GardenCard key={s.habit.id} s={s} onEdit={() => edit(s.habit)} onRemove={() => remove(s.habit)} />)}
@@ -132,7 +136,7 @@ export default function Habits() {
 
 function Stat({ big, label, icon }: { big: string; label: string; icon: string }) {
   return <div className="rounded-2xl bg-[var(--line)]/60 px-4 py-2.5 min-w-[92px]">
-    <div className="text-lg font-bold tabular-nums">{icon} {big}</div>
+    <div className="text-lg font-bold tabular-nums flex items-center gap-1.5"><Img src={icon} size={22} />{big}</div>
     <div className="text-[11px] muted">{label}</div>
   </div>
 }
@@ -145,13 +149,13 @@ function Tile({ s, pop, onTick }: { s: HabitStat; pop?: number; onTick: () => vo
       className="panel relative text-left p-4 flex items-center gap-3 transition active:scale-[.98] overflow-visible"
       style={s.doneToday ? { background: `color-mix(in srgb, ${c} 16%, var(--panel))`, borderColor: `color-mix(in srgb, ${c} 45%, transparent)` } : undefined}>
       <div key={pop} className={`w-12 h-12 rounded-2xl grid place-items-center text-2xl shrink-0 ${pop ? 'habit-pop' : ''}`}
-        style={{ background: `color-mix(in srgb, ${c} 20%, transparent)` }}>{s.habit.icon}</div>
+        style={{ background: `color-mix(in srgb, ${c} 20%, transparent)` }}><HabitIcon name={s.habit.icon} habitName={s.habit.name} size={38} /></div>
       <div className="flex-1 min-w-0">
         <div className={`font-semibold truncate ${s.doneToday ? 'opacity-80' : ''}`}>{s.habit.name}</div>
-        <div className="text-xs muted flex gap-2 mt-0.5 flex-wrap">
-          <span>{s.level.icon} {s.level.name}</span>
-          {s.streak > 0 && <span className="font-semibold" style={{ color: '#ff9500' }}>🔥 {s.streak}</span>}
-          {!s.doneToday && ms && s.streak > 0 && ms.days - s.streak <= 2 && <span>· {ms.days - s.streak} to +{ms.gems}💎</span>}
+        <div className="text-xs muted flex items-center gap-2 mt-0.5 flex-wrap">
+          <span className="inline-flex items-center gap-1"><HabitIcon name={s.level.icon} size={16} />{s.level.name}</span>
+          {s.streak > 0 && <span className="font-semibold inline-flex items-center gap-0.5" style={{ color: '#ff9500' }}><Img src="achievements/wildfire" size={15} />{s.streak}</span>}
+          {!s.doneToday && ms && s.streak > 0 && ms.days - s.streak <= 2 && <span className="inline-flex items-center gap-0.5">· {ms.days - s.streak} to +{ms.gems}<HabitIcon name="gem" size={14} /></span>}
         </div>
       </div>
       <div className="w-8 h-8 rounded-full grid place-items-center shrink-0 transition"
@@ -175,7 +179,7 @@ function GardenCard({ s, onEdit, onRemove }: { s: HabitStat; onEdit: () => void;
   return (
     <div className="panel p-4 space-y-3 group">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl grid place-items-center text-xl" style={{ background: `color-mix(in srgb, ${c} 20%, transparent)` }}>{s.habit.icon}</div>
+        <div className="w-11 h-11 rounded-xl grid place-items-center" style={{ background: `color-mix(in srgb, ${c} 20%, transparent)` }}><HabitIcon name={s.habit.icon} habitName={s.habit.name} size={34} /></div>
         <div className="flex-1 min-w-0">
           <div className="font-semibold truncate">{s.habit.name}</div>
           <div className="text-xs muted">{scheduleLabel(s.habit)}</div>
@@ -187,8 +191,8 @@ function GardenCard({ s, onEdit, onRemove }: { s: HabitStat; onEdit: () => void;
       {/* Level */}
       <div>
         <div className="flex items-center text-xs mb-1">
-          <span className="font-semibold">{s.level.icon} {s.level.name}</span>
-          <span className="ml-auto muted">{s.level.next ? `${s.level.toNext} more to ${s.level.next.icon} ${s.level.next.name}` : 'Fully grown'}</span>
+          <span className="font-semibold inline-flex items-center gap-1"><HabitIcon name={s.level.icon} size={20} />{s.level.name}</span>
+          <span className="ml-auto muted inline-flex items-center gap-1">{s.level.next ? <>{s.level.toNext} more to <HabitIcon name={s.level.next.icon} size={18} />{s.level.next.name}</> : 'Fully grown'}</span>
         </div>
         <div className="h-2 rounded-full bg-[var(--line)] overflow-hidden">
           <div className="h-full rounded-full" style={{ width: `${s.level.pct * 100}%`, background: c, transition: 'width .7s cubic-bezier(.2,.8,.2,1)' }} />
@@ -196,7 +200,7 @@ function GardenCard({ s, onEdit, onRemove }: { s: HabitStat; onEdit: () => void;
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">
-        <div><div className="font-bold tabular-nums">🔥 {s.streak}</div><div className="text-[11px] muted">streak</div></div>
+        <div><div className="font-bold tabular-nums inline-flex items-center gap-1"><Img src="achievements/wildfire" size={18} />{s.streak}</div><div className="text-[11px] muted">streak</div></div>
         <div><div className="font-bold tabular-nums">{s.best}</div><div className="text-[11px] muted">best</div></div>
         <div><div className="font-bold tabular-nums">{Math.round(s.rate30 * 100)}%</div><div className="text-[11px] muted">last 30 days</div></div>
       </div>
@@ -211,7 +215,7 @@ function GardenCard({ s, onEdit, onRemove }: { s: HabitStat; onEdit: () => void;
         </div>)}
       </div>
 
-      {ms && <div className="text-xs muted">Next badge: <b className="text-[var(--text)]">{ms.days}-day streak</b> · {ms.days - s.streak} to go · +{ms.gems} 💎</div>}
+      {ms && <div className="text-xs muted">Next badge: <b className="text-[var(--text)]">{ms.days}-day streak</b> · {ms.days - s.streak} to go · <span className="inline-flex items-center gap-0.5 align-middle">+{ms.gems}<HabitIcon name="gem" size={14} /></span></div>}
     </div>
   )
 }

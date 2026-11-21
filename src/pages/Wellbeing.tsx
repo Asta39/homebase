@@ -82,7 +82,7 @@ export default function Wellbeing() {
       </section>
 
       <Link to="/habits" className="panel p-5 flex items-center gap-4 hover:brightness-105 transition">
-        <div className="text-3xl">🌱</div>
+        <img src={`${import.meta.env.BASE_URL}habits/stage-2.png`} alt="" className="w-11 h-11 object-contain" />
         <div className="flex-1">
           <div className="font-semibold">Habits</div>
           <div className="text-sm muted">{habits.length ? `${habits.length} habit${habits.length === 1 ? '' : 's'} growing · streaks, levels and gems` : 'Build small daily habits that grow from seeds into oaks'}</div>

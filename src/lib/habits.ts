@@ -15,14 +15,36 @@ export const scheduleOf = (h: Habit) => SCHEDULES.find(s => s.days.join() === (h
 export const scheduleLabel = (h: Habit) => SCHEDULES.find(s => s.value === scheduleOf(h))!.label
 export const dueOn = (h: Habit, d: Date) => !h.days?.length || h.days.includes(d.getDay())
 
+/** Generated 3D icons in public/habits/<key>.png */
+export const HABIT_ICONS: { key: string; label: string; words: string[] }[] = [
+  { key: 'read', label: 'Reading', words: ['read', 'book', 'novel'] },
+  { key: 'phone', label: 'Phone down', words: ['phone', 'screen', 'scroll', 'social'] },
+  { key: 'walk', label: 'Walk / run', words: ['walk', 'run', 'step', 'air', 'outside', 'jog'] },
+  { key: 'stretch', label: 'Stretch / yoga', words: ['stretch', 'yoga', 'exercise', 'workout', 'gym'] },
+  { key: 'journal', label: 'Journal', words: ['journal', 'write', 'diary', 'gratitude'] },
+  { key: 'meditate', label: 'Meditate', words: ['meditat', 'breath', 'calm', 'mindful', 'pray'] },
+  { key: 'eat', label: 'Eat well', words: ['eat', 'fruit', 'veg', 'food', 'breakfast', 'healthy'] },
+  { key: 'teeth', label: 'Skincare / teeth', words: ['teeth', 'floss', 'brush', 'skin'] },
+  { key: 'music', label: 'Music / practice', words: ['music', 'piano', 'guitar', 'practice', 'sing'] },
+  { key: 'water', label: 'Water', words: ['water', 'drink', 'hydrat'] },
+  { key: 'bed', label: 'Sleep / make bed', words: ['bed', 'sleep', 'nap'] },
+  { key: 'sunrise', label: 'Early start', words: ['early', 'wake', 'morning', 'alarm'] },
+]
+/** Resolve a stored icon (key, or an old emoji) to an icon key, guessing from the habit's name if needed */
+export function iconFor(icon: string, name = '') {
+  if (HABIT_ICONS.some(i => i.key === icon)) return icon
+  const n = name.toLowerCase()
+  return HABIT_ICONS.find(i => i.words.some(w => n.includes(w)))?.key ?? 'stage-1'
+}
+
 /** A habit grows like a plant the more often it's done */
 export const HABIT_LEVELS = [
-  { at: 0, name: 'Seed', icon: '🌰' },
-  { at: 5, name: 'Sprout', icon: '🌱' },
-  { at: 15, name: 'Sapling', icon: '🌿' },
-  { at: 30, name: 'Bloom', icon: '🌷' },
-  { at: 60, name: 'Tree', icon: '🌳' },
-  { at: 100, name: 'Ancient Oak', icon: '🏞️' },
+  { at: 0, name: 'Seed', icon: 'stage-0' },
+  { at: 5, name: 'Sprout', icon: 'stage-1' },
+  { at: 15, name: 'Sapling', icon: 'stage-2' },
+  { at: 30, name: 'Bloom', icon: 'stage-3' },
+  { at: 60, name: 'Tree', icon: 'stage-4' },
+  { at: 100, name: 'Ancient Oak', icon: 'stage-5' },
 ]
 export function habitLevel(total: number) {
   let i = 0; HABIT_LEVELS.forEach((l, n) => { if (total >= l.at) i = n })

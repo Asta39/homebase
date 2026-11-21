@@ -29,7 +29,7 @@ export function habitStreak(dates: Set<string>, today: Date, key: (d: Date) => s
 }
 
 export const STARTER_HABITS = [
-  { name: 'Read 20 minutes', icon: '📖' },
-  { name: 'No phone after 10pm', icon: '📵' },
-  { name: 'Fresh air / walk', icon: '🚶' },
+  { name: 'Read 20 minutes', icon: 'read' },
+  { name: 'No phone after 10pm', icon: 'phone' },
+  { name: 'Fresh air / walk', icon: 'walk' },
 ]

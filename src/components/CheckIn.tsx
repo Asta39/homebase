@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { db } from '../lib/db'
 import { ymd } from '../lib/workout'
 import { dueOn } from '../lib/habits'
+import HabitIcon from './HabitIcon'
 import { MOODS, MOOD_LABELS, SLEEP_GOAL, WATER_GOAL, toggleHabit, updateDay } from '../lib/wellbeing'
 
 /** Today's check-in: mood, sleep, water, habits. Big tap targets so it works on a kitchen touchscreen. */
@@ -53,8 +54,8 @@ export default function CheckIn({ compact = false }: { compact?: boolean }) {
       {habits.length > 0 && <div className="flex flex-wrap gap-2 col-span-full">
         {habits.filter(h => dueOn(h, new Date(date + 'T12:00'))).map(h => (
           <button key={h.id} onClick={() => toggleHabit(date, h.id!)}
-            className={`px-3 py-1.5 rounded-full text-sm border transition ${isDone(h.id!) ? 'bg-green-500 border-green-500 text-white' : 'border-[var(--line)] hover:border-green-500'}`}>
-            {h.icon} {h.name}{isDone(h.id!) ? ' ✓' : ''}
+            className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full text-sm border transition ${isDone(h.id!) ? 'bg-green-500 border-green-500 text-white' : 'border-[var(--line)] hover:border-green-500'}`}>
+            <HabitIcon name={h.icon} habitName={h.name} size={22} />{h.name}
           </button>
         ))}
       </div>}
