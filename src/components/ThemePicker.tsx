@@ -6,7 +6,7 @@ export default function ThemePicker({ bare = false }: { bare?: boolean }) {
   const active = useTheme()
   const { mode } = useMode()
   const MODES: { id: Mode; label: string; icon: typeof Sun; hint: string }[] = [
-    { id: 'auto', label: 'Auto', icon: Monitor, hint: active.id === 'glam' ? 'Glam picks dark' : 'Follows Windows' },
+    { id: 'auto', label: 'Auto', icon: Monitor, hint: active.darkByDefault ? `${active.name} looks best dark` : 'Follows Windows' },
     { id: 'light', label: 'Light', icon: Sun, hint: '' },
     { id: 'dark', label: 'Dark', icon: Moon, hint: '' },
   ]
@@ -16,14 +16,14 @@ export default function ThemePicker({ bare = false }: { bare?: boolean }) {
         <h2 className="font-semibold">Theme</h2>
         <p className="muted text-sm">Classic for focus, or something more fun. Changes the wallpaper, accent colour and little details on cards.</p>
       </div>}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className={`grid gap-3 ${bare ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-4'}`}>
         {THEMES.map(t => {
           const on = t.id === active.id
           const d = Object.values(t.decos)
           return (
             <button key={t.id} onClick={() => setTheme(t.id)} aria-pressed={on}
               className={`relative text-left rounded-2xl overflow-hidden border-2 transition ${on ? 'border-[var(--accent)] shadow-lg' : 'border-transparent hover:border-[var(--line)]'}`}>
-              <div className={`h-28 bg-cover bg-center relative ${t.id === 'classic' ? 'wall-evening' : ''}`}
+              <div className={`h-28 bg-cover bg-center relative ${t.id === 'classic' ? 'welcome-sunset' : ''}`}
                 style={t.preview ? { backgroundImage: `url(${t.preview})` } : undefined}>
                 {t.id === 'classic' && <div className="absolute inset-4 rounded-xl bg-[var(--glass)] backdrop-blur" />}
                 {d.slice(0, 3).map((x, i) => (

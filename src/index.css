@@ -170,3 +170,15 @@ aside { background: color-mix(in srgb, var(--glass) 70%, transparent); backdrop-
 :is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main > div > div > .panel:first-of-type::after { background-image: var(--d0); width: 72px; height: 72px; top: -28px; right: -20px; left: auto; rotate: 12deg; }
 /* dialogs */
 :is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) form.panel::after { background-image: var(--d5); top: -26px; left: -22px; right: auto; rotate: -18deg; width: 70px; height: 70px; }
+
+/* ---------- First-run setup ---------- */
+.welcome-shell { background: var(--glass); backdrop-filter: blur(28px) saturate(170%); -webkit-backdrop-filter: blur(28px) saturate(170%); }
+.welcome-title { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.08; font-weight: 700; letter-spacing: -.025em; }
+@keyframes step-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.step-in { animation: step-in .45s cubic-bezier(.2, .8, .2, 1) both; }
+@media (prefers-reduced-motion: reduce) { .step-in { animation: none; } }
+/* Classic's showcase: a warm sunset, not the muted page wallpaper */
+.welcome-sunset { background:
+  radial-gradient(600px 420px at 20% 15%, rgba(255, 226, 170, .9), transparent 60%),
+  radial-gradient(520px 460px at 85% 35%, rgba(255, 150, 120, .75), transparent 60%),
+  linear-gradient(160deg, #f7b57c 0%, #f08c5f 48%, #c4523a 100%); }
