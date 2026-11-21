@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../lib/db'
 import { dayStatus, streak, ymd, type DayStatus } from '../lib/workout'
 import { confirmBox, form } from '../components/Dialog'
+import Flame from '../components/Flame'
 import TodayWorkout from '../components/TodayWorkout'
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -43,7 +44,7 @@ export default function Workout() {
         <section className="panel p-5">
           <div className="flex items-baseline gap-3 mb-3">
             <h2 className="font-semibold">Last 5 weeks</h2>
-            <span className="muted text-sm">🔥 {streak(all, logs, today)} now · best {best}</span>
+            <span className="muted text-sm inline-flex items-center gap-1"><Flame size={16} />{streak(all, logs, today)} now · best {best}</span>
           </div>
           <div className="max-w-sm"><div className="grid grid-cols-7 gap-1.5 text-center text-xs muted mb-1">{['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={i}>{d}</span>)}</div>
           <div className="grid grid-cols-7 gap-1.5">

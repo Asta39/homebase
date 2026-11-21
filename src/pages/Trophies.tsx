@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Flame, Gem, Snowflake, Target, Trophy } from 'lucide-react'
+import { Gem, Snowflake, Target, Trophy } from 'lucide-react'
 import { db, setSetting } from '../lib/db'
 import { DAILY_GOALS, FREEZE_PRICE, LEAGUES, MAX_FREEZES, TIER_NAMES, achDesc, gameState } from '../lib/gamify'
 import { ymd } from '../lib/workout'
 import { confirmBox, notify } from '../components/Dialog'
 import Medal from '../components/Medal'
+import Flame from '../components/Flame'
 import Decor from '../components/Decor'
 
 /** The game hub: streak, daily goal, league, gem shop, every achievement and recent XP. */
@@ -46,7 +47,7 @@ export default function Trophies() {
         <section className="glass relative p-5 overflow-hidden">
           <Decor item={0} corner="tr" size={64} rotate={12} />
           <div className="flex items-center gap-2 text-sm font-semibold text-orange-500"><Flame size={16} /> Streak</div>
-          <div className="flex items-baseline gap-2 mt-1"><span className={`text-5xl font-black tabular-nums ${g.streak ? 'text-orange-500' : 'muted'}`}>{g.streak}</span><span className="muted">day{g.streak === 1 ? '' : 's'}</span></div>
+          <div className="flex items-center gap-2 mt-1"><Flame size={44} className={g.streak ? '' : 'grayscale opacity-50'} /><span className={`text-5xl font-black tabular-nums ${g.streak ? 'text-orange-500' : 'muted'}`}>{g.streak}</span><span className="muted">day{g.streak === 1 ? '' : 's'}</span></div>
           <div className="text-xs muted mt-1">Longest {g.longest} · {g.goalMet ? 'goal hit today ✓' : 'hit your goal to extend'}</div>
         </section>
         <section className="glass p-5">
@@ -78,7 +79,7 @@ export default function Trophies() {
                 strokeDasharray={213.6} strokeDashoffset={213.6 * (1 - goalPct)} style={{ transition: 'stroke-dashoffset .8s' }} />
             </svg>
             <div><div className="text-3xl font-bold tabular-nums">{g.xpToday}<span className="text-base muted font-normal">/{g.dailyGoal} XP</span></div>
-              <div className="text-sm muted">{g.goalMet ? 'Goal reached — streak safe 🔥' : `${g.dailyGoal - g.xpToday} XP to go today`}</div></div>
+              <div className="text-sm muted">{g.goalMet ? 'Goal reached — streak safe' : `${g.dailyGoal - g.xpToday} XP to go today`}</div></div>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {DAILY_GOALS.map(d => (
@@ -109,13 +110,13 @@ export default function Trophies() {
               const key = ymd(d), met = g.metDays.has(key), froze = g.frozenDays.has(key), isToday = key === g.today
               return (
                 <div key={i} title={met ? 'Goal hit' : froze ? 'Saved by a freeze' : undefined}
-                  className={`aspect-square rounded-lg grid place-items-center text-xs tabular-nums ${met ? 'bg-orange-500 text-white font-bold' : froze ? 'bg-sky-400/30' : key < g.today ? 'muted' : ''} ${isToday ? 'ring-2 ring-[var(--accent)]' : ''}`}>
-                  {met ? '🔥' : froze ? '❄️' : d.getDate()}
+                  className={`aspect-square rounded-lg grid place-items-center text-xs tabular-nums ${met ? 'bg-orange-500/20 font-bold' : froze ? 'bg-sky-400/30' : key < g.today ? 'muted' : ''} ${isToday ? 'ring-2 ring-[var(--accent)]' : ''}`}>
+                  {met ? <Flame size={20} /> : froze ? '❄️' : d.getDate()}
                 </div>
               )
             })}
           </div>
-          <div className="flex gap-4 text-xs muted mt-3"><span>🔥 goal hit</span><span>❄️ freeze used</span></div>
+          <div className="flex gap-4 text-xs muted mt-3"><span className="inline-flex items-center gap-1"><Flame size={14} /> goal hit</span><span>❄️ freeze used</span></div>
         </section>
 
         {/* ---------- XP chart + shop ---------- */}

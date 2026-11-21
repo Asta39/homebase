@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Link } from 'react-router-dom'
 import { db, type Workout } from '../lib/db'
+import Flame from './Flame'
 import { setCount, streak, tickSet, ymd } from '../lib/workout'
 
 /** Today's exercises with one bubble per set. Used on the Workout page and the dashboard. */
@@ -21,7 +22,7 @@ export default function TodayWorkout({ compact = false }: { compact?: boolean })
       <div className="flex items-baseline gap-3 mb-3">
         <h2 className="font-semibold">{compact ? 'Workout' : 'Today'}</h2>
         {total > 0 && <span className="muted text-sm">{done}/{total} sets</span>}
-        {s > 0 && <span className="ml-auto text-sm font-semibold text-orange-500">🔥 {s} day{s === 1 ? '' : 's'}</span>}
+        {s > 0 && <span className="ml-auto text-sm font-semibold text-orange-500 inline-flex items-center gap-1"><Flame size={16} />{s} day{s === 1 ? '' : 's'}</span>}
       </div>
       {!todays.length ? <RestDay plan={plan} now={now} streakDays={s} /> : <>
         {total > 0 && <div className="h-1.5 rounded-full bg-[var(--line)] overflow-hidden mb-3">

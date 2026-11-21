@@ -13,6 +13,7 @@ import WeatherCard from '../components/WeatherCard'
 import TodayWorkout from '../components/TodayWorkout'
 import CheckIn from '../components/CheckIn'
 import Decor from "../components/Decor"
+import Flame from '../components/Flame'
 import Medal from "../components/Medal"
 
 const greet = (h: number) => (h < 5 ? 'Up late' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening')
@@ -60,7 +61,7 @@ export default function Dashboard() {
           {game && <div className="mt-5 space-y-3">
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <Link to="/trophies" className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold ${game.streak ? 'bg-orange-500 text-white' : 'bg-[var(--line)] muted'}`} title="Day streak">
-                🔥 {game.streak}<span className="font-medium opacity-90">day{game.streak === 1 ? '' : 's'}</span></Link>
+                <Flame size={18} className={game.streak ? 'drop-shadow-[0_1px_1px_rgba(0,0,0,.25)]' : 'grayscale opacity-60'} />{game.streak}<span className="font-medium opacity-90">day{game.streak === 1 ? '' : 's'}</span></Link>
               <Link to="/trophies" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold bg-sky-500/15 text-sky-500" title="Gems">💎 {game.gems}</Link>
               {game.freezes > 0 && <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sky-400/15 text-xs" title="Streak freezes">❄️ {game.freezes}</span>}
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold" style={{ background: `${game.league.color}26`, color: `color-mix(in srgb, ${game.league.color} 70%, var(--text))` }}>🏅 {game.league.name}</span>
