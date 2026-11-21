@@ -46,7 +46,7 @@ export default function Welcome() {
     getSetting('weatherPlace').then(v => v && setPlace(JSON.parse(v)))
     const t = setInterval(() => setNow(new Date()), 15_000); return () => clearInterval(t)
   }, [])
-  useEffect(() => { if (step === STEPS.length - 1) setTimeout(() => celebrate(`Welcome${name ? `, ${name}` : ''}! 🎉`), 250) }, [step]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (step === STEPS.length - 1) setTimeout(() => celebrate(`Welcome${name ? `, ${name}` : ''}!`), 250) }, [step]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const go = (n: number) => setStep(Math.max(0, Math.min(STEPS.length - 1, n)))
   const next = () => go(step + 1)

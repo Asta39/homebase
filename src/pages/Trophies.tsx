@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Gem, Snowflake, Target, Trophy } from 'lucide-react'
+import { Target, Trophy } from 'lucide-react'
 import { db, setSetting } from '../lib/db'
 import { DAILY_GOALS, FREEZE_PRICE, LEAGUES, MAX_FREEZES, TIER_NAMES, achDesc, gameState } from '../lib/gamify'
 import { ymd } from '../lib/workout'
 import { confirmBox, notify } from '../components/Dialog'
 import Medal from '../components/Medal'
 import Flame from '../components/Flame'
+import Art from '../components/Art'
 import Decor from '../components/Decor'
 
 /** The game hub: streak, daily goal, league, gem shop, every achievement and recent XP. */
@@ -18,8 +19,8 @@ export default function Trophies() {
   const setGoal = (xp: number) => setSetting('dailyGoal', String(xp))
   const buyFreeze = async () => {
     if (g.freezes >= MAX_FREEZES) return notify('Already fully stocked', `You can hold up to ${MAX_FREEZES} streak freezes.`)
-    if (g.gems < FREEZE_PRICE) return notify('Not enough gems', `A streak freeze costs ${FREEZE_PRICE} 💎. Complete quests and unlock achievements to earn more.`)
-    if (!(await confirmBox('Buy a streak freeze?', `Costs ${FREEZE_PRICE} 💎. If you miss your goal one day, it's used automatically to keep your streak.`, 'Buy'))) return
+    if (g.gems < FREEZE_PRICE) return notify('Not enough gems', `A streak freeze costs ${FREEZE_PRICE} gems. Complete quests and unlock achievements to earn more.`)
+    if (!(await confirmBox('Buy a streak freeze?', `Costs ${FREEZE_PRICE} gems. If you miss your goal one day, it's used automatically to keep your streak.`, 'Buy'))) return
     await db.rewards.add({ key: `buy:freeze:${Date.now()}`, date: ymd(new Date()), gems: -FREEZE_PRICE, xp: 0, label: 'Bought a streak freeze' })
     await setSetting('freezes', String(g.freezes + 1))
   }
@@ -51,9 +52,9 @@ export default function Trophies() {
           <div className="text-xs muted mt-1">Longest {g.longest} · {g.goalMet ? 'goal hit today ✓' : 'hit your goal to extend'}</div>
         </section>
         <section className="glass p-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-sky-500"><Gem size={16} /> Gems</div>
+          <div className="flex items-center gap-2 text-sm font-semibold text-sky-500"><Art name="gem" size={18} /> Gems</div>
           <div className="text-5xl font-black tabular-nums mt-1">{g.gems}</div>
-          <div className="text-xs muted mt-1 flex items-center gap-1"><Snowflake size={12} /> {g.freezes}/{MAX_FREEZES} streak freezes</div>
+          <div className="text-xs muted mt-1 flex items-center gap-1"><Art name="freeze" size={14} /> {g.freezes}/{MAX_FREEZES} streak freezes</div>
         </section>
         <section className="glass p-5">
           <div className="flex items-center gap-2 text-sm font-semibold text-amber-500"><Trophy size={16} /> Level {g.level}</div>
@@ -92,7 +93,7 @@ export default function Trophies() {
           <details className="text-xs muted"><summary className="cursor-pointer">How to earn XP</summary>
             <ul className="mt-2 space-y-0.5">
               <li>🍅 2 XP per focus minute</li><li>🃏 3 XP per flashcard</li><li>❓ 10 XP per correct quiz answer</li><li>📝 25 XP per past-paper answer</li>
-              <li>📈 30 XP per topic moved up a colour</li><li>💪 5 XP per workout set · ✅ 10 per habit · 💧 2 per glass</li><li>🏆 Quests give bonus XP + 💎</li>
+              <li>📈 30 XP per topic moved up a colour</li><li>💪 5 XP per workout set · ✅ 10 per habit · 💧 2 per glass</li><li>Quests give bonus XP + gems</li>
             </ul></details>
         </section>
 
@@ -111,12 +112,12 @@ export default function Trophies() {
               return (
                 <div key={i} title={met ? 'Goal hit' : froze ? 'Saved by a freeze' : undefined}
                   className={`aspect-square rounded-lg grid place-items-center text-xs tabular-nums ${met ? 'bg-orange-500/20 font-bold' : froze ? 'bg-sky-400/30' : key < g.today ? 'muted' : ''} ${isToday ? 'ring-2 ring-[var(--accent)]' : ''}`}>
-                  {met ? <Flame size={20} /> : froze ? '❄️' : d.getDate()}
+                  {met ? <Flame size={20} /> : froze ? <Art name="freeze" size={20} /> : d.getDate()}
                 </div>
               )
             })}
           </div>
-          <div className="flex gap-4 text-xs muted mt-3"><span className="inline-flex items-center gap-1"><Flame size={14} /> goal hit</span><span>❄️ freeze used</span></div>
+          <div className="flex gap-4 text-xs muted mt-3"><span className="inline-flex items-center gap-1"><Flame size={14} /> goal hit</span><span className="inline-flex items-center gap-1"><Art name="freeze" size={14} /> freeze used</span></div>
         </section>
 
         {/* ---------- XP chart + shop ---------- */}
@@ -136,9 +137,9 @@ export default function Trophies() {
           <div>
             <div className="font-semibold mb-2">Shop</div>
             <div className="flex items-center gap-3 rounded-2xl bg-[var(--line)]/60 p-3">
-              <div className="w-11 h-11 rounded-xl grid place-items-center bg-sky-400/25 text-2xl">❄️</div>
+              <div className="w-11 h-11 rounded-xl grid place-items-center bg-sky-400/25"><Art name="freeze" size={34} /></div>
               <div className="flex-1 min-w-0"><div className="font-medium text-sm">Streak freeze</div><div className="text-xs muted">Saves your streak if you miss a day · have {g.freezes}/{MAX_FREEZES}</div></div>
-              <button className="btn !px-3 text-sm whitespace-nowrap" onClick={buyFreeze} disabled={g.freezes >= MAX_FREEZES}>{FREEZE_PRICE} 💎</button>
+              <button className="btn !px-3 text-sm whitespace-nowrap" onClick={buyFreeze} disabled={g.freezes >= MAX_FREEZES}><span className="inline-flex items-center gap-1">{FREEZE_PRICE}<Art name="gem" size={16} /></span></button>
             </div>
           </div>
         </section>

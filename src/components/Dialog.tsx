@@ -48,7 +48,7 @@ export function DialogHost() {
   const missing = req.fields.some(f => f.required && !values[f.name]?.trim())
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
       onMouseDown={e => e.target === e.currentTarget && close(null)}
       onKeyDown={e => e.key === 'Escape' && close(null)}>
       <form className="panel w-full max-w-sm p-5 space-y-3 shadow-2xl"

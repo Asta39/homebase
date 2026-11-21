@@ -146,7 +146,7 @@ function Tile({ s, pop, onTick }: { s: HabitStat; pop?: number; onTick: () => vo
   const ms = nextMilestone(s.streak)
   return (
     <button onClick={onTick} aria-pressed={s.doneToday}
-      className="panel relative text-left p-4 flex items-center gap-3 transition active:scale-[.98] overflow-visible"
+      className={`panel relative text-left p-4 flex items-center gap-3 transition active:scale-[.98] !overflow-visible ${pop && Date.now() - pop < 1500 ? 'z-30' : ''}`}
       style={s.doneToday ? { background: `color-mix(in srgb, ${c} 16%, var(--panel))`, borderColor: `color-mix(in srgb, ${c} 45%, transparent)` } : undefined}>
       <div key={pop} className={`w-12 h-12 rounded-2xl grid place-items-center text-2xl shrink-0 ${pop ? 'habit-pop' : ''}`}
         style={{ background: `color-mix(in srgb, ${c} 20%, transparent)` }}><HabitIcon name={s.habit.icon} habitName={s.habit.name} size={38} /></div>

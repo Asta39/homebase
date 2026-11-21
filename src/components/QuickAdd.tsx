@@ -82,7 +82,7 @@ export default function QuickAdd() {
       </MetalFx>
     </div>
 
-    {open && <div className="fixed inset-0 z-50 bg-black/35 backdrop-blur-[3px] flex items-start justify-center pt-[14vh] p-4" onMouseDown={e => e.target === e.currentTarget && close()}>
+    {open && <div className="fixed inset-0 z-[1000] bg-black/35 backdrop-blur-[3px] flex items-start justify-center pt-[14vh] p-4" onMouseDown={e => e.target === e.currentTarget && close()}>
       <div className="w-full max-w-xl rounded-[20px] overflow-hidden border border-[var(--line)] shadow-[0_30px_80px_-20px_rgba(0,0,0,.55)]"
         style={{ background: 'var(--panel)', backdropFilter: 'blur(30px) saturate(1.4)' }}>
         <form className="flex items-center gap-3 px-5 h-16" onSubmit={e => { e.preventDefault(); understand(text) }}>

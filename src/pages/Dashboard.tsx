@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BorderBeam } from 'border-beam'
 import { useMode } from "../lib/theme"
-import { ChevronRight, Sparkles, Trophy, CalendarClock, GraduationCap, Layers, Flame } from 'lucide-react'
+import { ChevronRight, Sparkles, Trophy, CalendarClock, GraduationCap, Layers } from 'lucide-react'
 import { db } from '../lib/db'
 import { ymd as iso } from '../lib/workout' // local date, not UTC
 import { achDesc, gameState, type Ring } from '../lib/gamify'
@@ -14,6 +14,7 @@ import TodayWorkout from '../components/TodayWorkout'
 import CheckIn from '../components/CheckIn'
 import Decor from "../components/Decor"
 import Flame from '../components/Flame'
+import Art from '../components/Art'
 import Medal from "../components/Medal"
 
 const greet = (h: number) => (h < 5 ? 'Up late' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening')
@@ -62,8 +63,8 @@ export default function Dashboard() {
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <Link to="/trophies" className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold ${game.streak ? 'bg-orange-500 text-white' : 'bg-[var(--line)] muted'}`} title="Day streak">
                 <Flame size={18} className={game.streak ? 'drop-shadow-[0_1px_1px_rgba(0,0,0,.25)]' : 'grayscale opacity-60'} />{game.streak}<span className="font-medium opacity-90">day{game.streak === 1 ? '' : 's'}</span></Link>
-              <Link to="/trophies" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold bg-sky-500/15 text-sky-500" title="Gems">💎 {game.gems}</Link>
-              {game.freezes > 0 && <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sky-400/15 text-xs" title="Streak freezes">❄️ {game.freezes}</span>}
+              <Link to="/trophies" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold bg-sky-500/15 text-sky-500" title="Gems"><Art name="gem" size={18} />{game.gems}</Link>
+              {game.freezes > 0 && <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sky-400/15 text-xs" title="Streak freezes"><Art name="freeze" size={18} />{game.freezes}</span>}
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold" style={{ background: `${game.league.color}26`, color: `color-mix(in srgb, ${game.league.color} 70%, var(--text))` }}>🏅 {game.league.name}</span>
             </div>
             <div>
@@ -201,7 +202,7 @@ export default function Dashboard() {
         {game && <section className="glass relative p-6 md:col-span-6 xl:col-span-12">
           <Decor item={4} corner="tr" size={92} rotate={8} />
           <Decor item={11} corner="bl" size={62} rotate={-16} />
-          <div className="flex items-center mb-4"><Flame size={18} className="mr-2 text-orange-500" /><h2 className="font-semibold">Achievements</h2>
+          <div className="flex items-center mb-4"><Trophy size={18} className="mr-2 text-orange-500" /><h2 className="font-semibold">Achievements</h2>
             <span className="ml-3 text-sm muted hidden sm:inline">{game.achievements.filter(a => a.tier).length} of {game.achievements.length} unlocked · {game.xp.toLocaleString()} XP total</span>
             <Link to="/trophies" className="ml-auto text-sm text-[var(--accent)] flex items-center">All trophies <ChevronRight size={16} /></Link></div>
           <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
