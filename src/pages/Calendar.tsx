@@ -53,7 +53,7 @@ export default function Calendar() {
   }
 
   return (
-    <div className="panel ios-cal p-4 sm:p-5 h-[calc(100vh-7.5rem)] min-h-[520px]">
+    <div className="panel ios-cal p-4 sm:p-5 h-[calc(100dvh-3rem)] min-h-[520px]">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
@@ -66,7 +66,7 @@ export default function Calendar() {
         eventContent={a => <div className="ios-ev" style={{ '--ev': a.event.backgroundColor } as React.CSSProperties}>
           {a.timeText && !a.event.allDay && <div className="ios-ev-t">{a.timeText}</div>}<div className="ios-ev-n">{a.event.title}</div></div>}
         height="100%" nowIndicator editable selectable selectMirror firstDay={1}
-        slotMinTime="06:00:00" scrollTime="07:00:00"
+        slotMinTime="06:00:00" slotMaxTime="23:00:00" scrollTime="07:00:00" expandRows
         events={events.map(e => ({ id: String(e.id), title: e.title, start: e.start, end: e.end, allDay: e.allDay, backgroundColor: color(e.subjectId) }))}
         eventDrop={move} eventResize={move} select={add} eventClick={edit}
       />

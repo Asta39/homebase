@@ -69,7 +69,7 @@ aside { background: color-mix(in srgb, var(--glass) 70%, transparent); backdrop-
 .fc .fc-day-today .fc-daygrid-day-number { background: var(--ios-red); color: #fff; font-weight: 600; }
 .fc .fc-daygrid-day { border-left: 0; border-right: 0; }
 /* Time grid */
-.fc .fc-timegrid-slot { height: 2.6rem; border-bottom: 0; }
+.fc .fc-timegrid-slot { height: 1.9rem; border-bottom: 0; }
 .fc .fc-timegrid-slot-minor { border-top-color: transparent; }
 .fc .fc-timegrid-slot-label-cushion, .fc .fc-timegrid-axis-cushion { color: var(--ios-muted); font-size: .7rem; font-weight: 500; }
 .fc .fc-timegrid-slot-label { vertical-align: top; border: 0; transform: translateY(-.55em); }
@@ -79,7 +79,7 @@ aside { background: color-mix(in srgb, var(--glass) 70%, transparent); backdrop-
 /* Events: tinted block with a coloured left bar, like iOS */
 .fc-event, .fc-event:hover { background: transparent !important; border: 0 !important; box-shadow: none !important; }
 .fc-timegrid-event .fc-event-main, .fc-daygrid-event .fc-event-main { padding: 0 !important; }
-.ios-ev { height: 100%; overflow: hidden; border-radius: 6px; padding: 3px 6px; border-left: 3px solid var(--ev);
+.ios-ev { height: 100%; overflow: hidden; border-radius: 6px; padding: 3px 6px;
   background: color-mix(in srgb, var(--ev) 22%, var(--ios-bg)); color: color-mix(in srgb, var(--ev) 62%, var(--ios-text)); font-size: .76rem; line-height: 1.25; }
 .ios-ev-n { font-weight: 600; }
 .ios-ev-t { font-size: .68rem; opacity: .8; }
