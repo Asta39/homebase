@@ -40,7 +40,7 @@ export default function Focus() {
   const bySubject = subjects.map(x => ({ ...x, m: today.filter(f => f.subjectId === x.id).reduce((t, f) => t + f.minutes, 0) })).filter(x => x.m)
 
   return (
-    <div className="max-w-3xl space-y-4">
+    <div className="max-w-3xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Focus</h1>
 
       <BorderBeam theme={resolved} size={s.phase === "break" ? "pulse-inner" : "md"} colorVariant={s.phase === "break" ? "mono" : "ocean"} strength={0.8} active={s.phase !== "idle" && !s.paused}>

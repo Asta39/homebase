@@ -28,7 +28,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="max-w-3xl space-y-4">
+    <div className="max-w-3xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Settings</h1>
       <ThemePicker />
       <section className="panel p-5 space-y-2">

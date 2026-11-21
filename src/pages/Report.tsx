@@ -50,7 +50,7 @@ export default function Report() {
   const maxMin = s ? Math.max(1, ...s.bySubject.map(b => b.min)) : 1
 
   return (
-    <div className="max-w-4xl space-y-4">
+    <div className="max-w-4xl mx-auto space-y-4">
       <div className="flex items-center gap-2 flex-wrap">
         <h1 className="text-2xl font-bold mr-auto">Weekly report</h1>
         <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" onClick={() => shift(-1)} aria-label="Previous week">‹</button>

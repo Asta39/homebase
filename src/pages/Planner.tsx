@@ -53,7 +53,7 @@ export default function Planner() {
   }
 
   return (
-    <div className="max-w-3xl space-y-4">
+    <div className="max-w-3xl mx-auto space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Study planner</h1>
         <p className="muted">Fills your free time with revision until your exams — weakest subjects and topics first, never clashing with your own events.</p>

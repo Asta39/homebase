@@ -45,7 +45,7 @@ export default function Wellbeing() {
   const dayLabels = <div className="flex gap-1 mt-1">{dates.map(d => <span key={ymd(d)} className="flex-1 text-center text-[10px] muted">{'SMTWTFS'[d.getDay()]}</span>)}</div>
 
   return (
-    <div className="max-w-4xl space-y-4">
+    <div className="max-w-4xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Wellbeing</h1>
       <div className="grid gap-4 lg:grid-cols-2">
         <CheckIn />
