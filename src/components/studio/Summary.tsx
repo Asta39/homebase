@@ -3,6 +3,7 @@ import { db } from '../../lib/db'
 import { makeSummary, md } from '../../lib/studio'
 import { notify } from '../Dialog'
 import Thinking from '../Thinking'
+import Art from '../Art'
 
 export default function Summary({ subjectId, subjectName, source, sourceLabel }: { subjectId: number; subjectName: string; source: string; sourceLabel: string }) {
   const [text, setText] = useState('')
@@ -28,7 +29,7 @@ export default function Summary({ subjectId, subjectName, source, sourceLabel }:
       {text && <>
         <article className="prose-sheet" dangerouslySetInnerHTML={{ __html: md(text) }} />
         <div className="flex gap-2">
-          <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={save} disabled={saved}>{saved ? 'Saved to notes ✓' : 'Save as note'}</button>
+          <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={save} disabled={saved}>{saved ? <span className="inline-flex items-center gap-1"><Art name="check" size={16} />Saved to notes</span> : 'Save as note'}</button>
           <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={() => window.print()}>Print</button>
         </div>
       </>}

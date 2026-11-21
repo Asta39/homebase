@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Target, Trophy } from 'lucide-react'
 import { db, setSetting } from '../lib/db'
 import { DAILY_GOALS, FREEZE_PRICE, LEAGUES, MAX_FREEZES, TIER_NAMES, achDesc, gameState } from '../lib/gamify'
 import { ymd } from '../lib/workout'
@@ -49,7 +48,7 @@ export default function Trophies() {
           <Decor item={0} corner="tr" size={64} rotate={12} />
           <div className="flex items-center gap-2 text-sm font-semibold text-orange-500"><Flame size={16} /> Streak</div>
           <div className="flex items-center gap-2 mt-1"><Flame size={44} className={g.streak ? '' : 'grayscale opacity-50'} /><span className={`text-5xl font-black tabular-nums ${g.streak ? 'text-orange-500' : 'muted'}`}>{g.streak}</span><span className="muted">day{g.streak === 1 ? '' : 's'}</span></div>
-          <div className="text-xs muted mt-1">Longest {g.longest} · {g.goalMet ? 'goal hit today ✓' : 'hit your goal to extend'}</div>
+          <div className="text-xs muted mt-1">Longest {g.longest} · {g.goalMet ? 'goal hit today' : 'hit your goal to extend'}</div>
         </section>
         <section className="glass p-5">
           <div className="flex items-center gap-2 text-sm font-semibold text-sky-500"><Art name="gem" size={18} /> Gems</div>
@@ -57,13 +56,13 @@ export default function Trophies() {
           <div className="text-xs muted mt-1 flex items-center gap-1"><Art name="freeze" size={14} /> {g.freezes}/{MAX_FREEZES} streak freezes</div>
         </section>
         <section className="glass p-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-amber-500"><Trophy size={16} /> Level {g.level}</div>
+          <div className="flex items-center gap-2 text-sm font-semibold text-amber-500"><Art name="level" size={20} /> Level {g.level}</div>
           <div className="text-2xl font-bold mt-1">{g.title}</div>
           <div className="h-2 rounded-full bg-[var(--line)] mt-3 overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style={{ width: `${(g.into / g.need) * 100}%` }} /></div>
           <div className="text-xs muted mt-1 tabular-nums">{g.into} / {g.need} XP · {g.xp.toLocaleString()} total</div>
         </section>
         <section className="glass p-5">
-          <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: g.league.color }}>🏅 {g.league.name} League</div>
+          <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: g.league.color }}><Art name="medal" size={20} /> {g.league.name} League</div>
           <div className="text-3xl font-bold tabular-nums mt-1">{g.thisWeekXp} <span className="text-base muted font-normal">XP this week</span></div>
           <div className="text-xs muted mt-1">{g.nextLeague ? `${Math.max(0, g.nextLeague.min - g.thisWeekXp)} more for ${g.nextLeague.name} next week` : 'Top division!'}</div>
         </section>
@@ -72,7 +71,7 @@ export default function Trophies() {
       <div className="grid gap-4 lg:grid-cols-3">
         {/* ---------- daily goal ---------- */}
         <section className="glass p-5 space-y-4">
-          <div className="flex items-center gap-2 font-semibold"><Target size={18} className="text-[var(--accent)]" /> Daily goal</div>
+          <div className="flex items-center gap-2 font-semibold"><Art name="target" size={24} /> Daily goal</div>
           <div className="flex items-center gap-4">
             <svg width="84" height="84" viewBox="0 0 84 84" className="-rotate-90 shrink-0" aria-label={`${g.xpToday} of ${g.dailyGoal} XP`}>
               <circle cx="42" cy="42" r="34" fill="none" stroke="var(--line)" strokeWidth="10" />
@@ -92,8 +91,7 @@ export default function Trophies() {
           </div>
           <details className="text-xs muted"><summary className="cursor-pointer">How to earn XP</summary>
             <ul className="mt-2 space-y-0.5">
-              <li>🍅 2 XP per focus minute</li><li>🃏 3 XP per flashcard</li><li>❓ 10 XP per correct quiz answer</li><li>📝 25 XP per past-paper answer</li>
-              <li>📈 30 XP per topic moved up a colour</li><li>💪 5 XP per workout set · ✅ 10 per habit · 💧 2 per glass</li><li>Quests give bonus XP + gems</li>
+              <li className="flex items-center gap-2"><Art name="tomato" size={20} />2 XP per focus minute</li><li className="flex items-center gap-2"><Art name="cards" size={20} />3 XP per flashcard</li><li className="flex items-center gap-2"><Art name="quiz" size={20} />10 XP per correct quiz answer</li><li className="flex items-center gap-2"><Art name="notes" size={20} />25 XP per past-paper answer</li><li className="flex items-center gap-2"><Art name="chart" size={20} />30 XP per topic moved up a colour</li><li className="flex items-center gap-2"><Art name="muscle" size={20} />5 XP per workout set</li><li className="flex items-center gap-2"><Art name="check" size={20} />10 XP per habit</li><li className="flex items-center gap-2"><Art name="water" size={20} />2 XP per glass</li><li className="flex items-center gap-2"><Art name="quests" size={20} />Quests give bonus XP + gems</li>
             </ul></details>
         </section>
 
@@ -101,8 +99,8 @@ export default function Trophies() {
         <section className="glass p-5">
           <div className="flex items-center mb-3">
             <div className="font-semibold mr-auto">{month.toLocaleDateString([], { month: 'long', year: 'numeric' })}</div>
-            <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" aria-label="Previous month" onClick={() => setMonth(m => new Date(m.getFullYear(), m.getMonth() - 1, 1))}>‹</button>
-            <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" aria-label="Next month" onClick={() => setMonth(m => new Date(m.getFullYear(), m.getMonth() + 1, 1))}>›</button>
+            <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" aria-label="Previous month" onClick={() => setMonth(m => new Date(m.getFullYear(), m.getMonth() - 1, 1))}><Art name="arrow" size={18} className="rotate-180 mx-auto" /></button>
+            <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" aria-label="Next month" onClick={() => setMonth(m => new Date(m.getFullYear(), m.getMonth() + 1, 1))}><Art name="arrow" size={18} className="mx-auto" /></button>
           </div>
           <div className="grid grid-cols-7 gap-1 text-center text-[11px] muted mb-1">{['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={i}>{d}</span>)}</div>
           <div className="grid grid-cols-7 gap-1">
@@ -152,7 +150,7 @@ export default function Trophies() {
           {LEAGUES.map(l => {
             const on = l.name === g.league.name
             return <div key={l.name} className={`shrink-0 rounded-2xl px-3 py-2 text-center min-w-20 border-2 ${on ? 'shadow-lg' : 'opacity-60'}`} style={{ borderColor: on ? l.color : 'transparent', background: on ? `${l.color}22` : 'var(--line)' }}>
-              <div className="text-xl">🏅</div><div className="text-xs font-semibold" style={{ color: on ? l.color : undefined }}>{l.name}</div><div className="text-[10px] muted">{l.min}+ XP</div>
+              <Art name="medal" size={30} className="mx-auto" /><div className="text-xs font-semibold" style={{ color: on ? l.color : undefined }}>{l.name}</div><div className="text-[10px] muted">{l.min}+ XP</div>
             </div>
           })}
         </div>
@@ -172,7 +170,7 @@ export default function Trophies() {
                 {a.next ? <>
                   <div className="h-1.5 rounded-full bg-[var(--line)] mt-2 overflow-hidden"><div className="h-full rounded-full bg-amber-500" style={{ width: `${Math.min(1, (a.value - a.prev) / (a.next - a.prev)) * 100}%` }} /></div>
                   <div className="text-[11px] muted mt-0.5 tabular-nums">{a.value} / {a.next} · next: {TIER_NAMES[a.tier]}</div>
-                </> : <div className="text-[11px] font-semibold mt-1" style={{ color: '#c86bfa' }}>★ Legend — maxed out</div>}
+                </> : <div className="text-[11px] font-semibold mt-1" style={{ color: '#c86bfa' }}><span className="inline-flex items-center gap-1"><Art name="star" size={14} />Legend — maxed out</span></div>}
               </div>
             </div>
           ))}

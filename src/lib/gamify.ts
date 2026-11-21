@@ -140,12 +140,12 @@ export async function gameState(now = new Date()) {
 
   // ---------- daily quests (rotate by weekday) ----------
   const pool: Quest[] = [
-    { id: 'focus', icon: '🍅', title: 'Focus for 50 minutes', progress: focusToday, goal: 50, xp: 50, done: focusToday >= 50, to: '/focus' },
-    { id: 'cards', icon: '🃏', title: 'Review 10 flashcards', progress: cardsToday, goal: 10, xp: 40, done: cardsToday >= 10, to: '/study' },
-    { id: 'quiz', icon: '❓', title: 'Score 80%+ on a quiz', progress: quizzesToday.some(q => q.score / q.total >= 0.8) ? 1 : 0, goal: 1, xp: 60, done: quizzesToday.some(q => q.score / q.total >= 0.8), to: '/study' },
-    { id: 'water', icon: '💧', title: `Drink ${GOALS.water} glasses`, progress: water, goal: GOALS.water, xp: 30, done: water >= GOALS.water, to: '/wellbeing' },
-    { id: 'move', icon: '💪', title: setsGoal ? 'Finish today’s workout' : 'Log a check-in', progress: setsGoal ? setsDone : (wToday?.mood ? 1 : 0), goal: setsGoal || 1, xp: 40, done: setsGoal ? setsDone >= setsGoal : !!wToday?.mood, to: setsGoal ? '/workout' : '/wellbeing' },
-    { id: 'habits', icon: '✅', title: 'Tick off every habit', progress: habitsDone, goal: Math.max(1, dueHabits.length), xp: 40, done: dueHabits.length > 0 && habitsDone >= dueHabits.length, to: '/habits' },
+    { id: 'focus', icon: 'tomato', title: 'Focus for 50 minutes', progress: focusToday, goal: 50, xp: 50, done: focusToday >= 50, to: '/focus' },
+    { id: 'cards', icon: 'cards', title: 'Review 10 flashcards', progress: cardsToday, goal: 10, xp: 40, done: cardsToday >= 10, to: '/study' },
+    { id: 'quiz', icon: 'quiz', title: 'Score 80%+ on a quiz', progress: quizzesToday.some(q => q.score / q.total >= 0.8) ? 1 : 0, goal: 1, xp: 60, done: quizzesToday.some(q => q.score / q.total >= 0.8), to: '/study' },
+    { id: 'water', icon: 'water', title: `Drink ${GOALS.water} glasses`, progress: water, goal: GOALS.water, xp: 30, done: water >= GOALS.water, to: '/wellbeing' },
+    { id: 'move', icon: 'muscle', title: setsGoal ? 'Finish today’s workout' : 'Log a check-in', progress: setsGoal ? setsDone : (wToday?.mood ? 1 : 0), goal: setsGoal || 1, xp: 40, done: setsGoal ? setsDone >= setsGoal : !!wToday?.mood, to: setsGoal ? '/workout' : '/wellbeing' },
+    { id: 'habits', icon: 'check', title: 'Tick off every habit', progress: habitsDone, goal: Math.max(1, dueHabits.length), xp: 40, done: dueHabits.length > 0 && habitsDone >= dueHabits.length, to: '/habits' },
   ]
   const rot = now.getDay()
   const quests = [pool[0], pool[1 + (rot % 2)], pool[3 + (rot % 3)]]
@@ -160,24 +160,24 @@ export async function gameState(now = new Date()) {
     return { id, icon, title, desc, value, tier, tiers, next: tiers[tier] ?? null, prev: tier ? tiers[tier - 1] : 0 }
   }
   const achievements: Achievement[] = [
-    ach('wildfire', '🔥', 'Wildfire', 'Reach a {n}-day streak', longest, [3, 7, 14, 30, 60, 100]),
-    ach('sage', '✨', 'Sage', 'Earn {n} XP', xp, [100, 500, 1000, 2500, 5000, 10000]),
-    ach('scholar', '⏱️', 'Scholar', 'Focus for {n} hours', focusHours, [1, 5, 10, 25, 50, 100]),
-    ach('cards', '🃏', 'Card Shark', 'Do {n} flashcard reviews', totalReviews, [25, 100, 250, 500, 1000, 2500]),
-    ach('whiz', '🧠', 'Quiz Whiz', 'Score 80%+ on {n} quizzes', quizzes.filter(q => q.score / q.total >= 0.8).length, [1, 3, 5, 10, 25, 50]),
-    ach('perfect', '💯', 'Perfectionist', 'Get 100% on {n} quizzes', quizzes.filter(q => q.score === q.total).length, [1, 3, 5, 10, 20, 40]),
-    ach('climber', '📈', 'Climber', 'Move {n} topics up a colour', improvedChanges.length, [1, 5, 10, 20, 40, 80]),
-    ach('examiner', '📝', 'Examiner', 'Mark {n} past-paper answers', papers.length, [1, 5, 10, 25, 50, 100]),
-    ach('quests', '🏆', 'Quest Master', 'Complete {n} daily quests', rewards.filter(r => r.key.startsWith('quest:')).length, [3, 15, 30, 75, 150, 300]),
-    ach('perfectweek', '📅', 'Perfect Week', 'Hit your goal every day for {n} weeks', perfectWeeks, [1, 2, 4, 8, 12, 26]),
-    ach('librarian', '📚', 'Librarian', 'Add {n} notes', notes.length, [1, 10, 25, 50, 100, 200]),
-    ach('ironwill', '💪', 'Iron Will', 'Work out on {n} days', workoutDays, [1, 5, 15, 30, 60, 100]),
-    ach('hydrated', '💧', 'Hydrated', 'Hit your water goal on {n} days', well.filter(w => w.water >= GOALS.water).length, [1, 7, 14, 30, 60, 100]),
-    ach('rested', '🌙', 'Well Rested', 'Sleep 8h+ on {n} nights', well.filter(w => (w.sleep ?? 0) >= 8).length, [1, 5, 14, 30, 60, 100]),
-    ach('habits', '✅', 'Habit Hero', 'Tick off {n} habits', hlogs.length, [5, 25, 50, 100, 250, 500]),
-    ach('gardener', '🌳', 'Gardener', 'Grow {n} habits to Bloom', habitStats(habits, hlogs, now).filter(x => x.level.index >= 3).length, [1, 2, 3, 4, 5, 6]),
-    ach('earlybird', '🌅', 'Early Bird', 'Start {n} focus sessions before 8am', focus.filter(f => hourOf(f.start) < 8).length, [1, 5, 10, 25, 50, 100]),
-    ach('nightowl', '🦉', 'Night Owl', 'Start {n} focus sessions after 9pm', focus.filter(f => hourOf(f.start) >= 21).length, [1, 5, 10, 25, 50, 100]),
+    ach('wildfire', '', 'Wildfire', 'Reach a {n}-day streak', longest, [3, 7, 14, 30, 60, 100]),
+    ach('sage', '', 'Sage', 'Earn {n} XP', xp, [100, 500, 1000, 2500, 5000, 10000]),
+    ach('scholar', '', 'Scholar', 'Focus for {n} hours', focusHours, [1, 5, 10, 25, 50, 100]),
+    ach('cards', '', 'Card Shark', 'Do {n} flashcard reviews', totalReviews, [25, 100, 250, 500, 1000, 2500]),
+    ach('whiz', '', 'Quiz Whiz', 'Score 80%+ on {n} quizzes', quizzes.filter(q => q.score / q.total >= 0.8).length, [1, 3, 5, 10, 25, 50]),
+    ach('perfect', '', 'Perfectionist', 'Get 100% on {n} quizzes', quizzes.filter(q => q.score === q.total).length, [1, 3, 5, 10, 20, 40]),
+    ach('climber', '', 'Climber', 'Move {n} topics up a colour', improvedChanges.length, [1, 5, 10, 20, 40, 80]),
+    ach('examiner', '', 'Examiner', 'Mark {n} past-paper answers', papers.length, [1, 5, 10, 25, 50, 100]),
+    ach('quests', '', 'Quest Master', 'Complete {n} daily quests', rewards.filter(r => r.key.startsWith('quest:')).length, [3, 15, 30, 75, 150, 300]),
+    ach('perfectweek', '', 'Perfect Week', 'Hit your goal every day for {n} weeks', perfectWeeks, [1, 2, 4, 8, 12, 26]),
+    ach('librarian', '', 'Librarian', 'Add {n} notes', notes.length, [1, 10, 25, 50, 100, 200]),
+    ach('ironwill', '', 'Iron Will', 'Work out on {n} days', workoutDays, [1, 5, 15, 30, 60, 100]),
+    ach('hydrated', '', 'Hydrated', 'Hit your water goal on {n} days', well.filter(w => w.water >= GOALS.water).length, [1, 7, 14, 30, 60, 100]),
+    ach('rested', '', 'Well Rested', 'Sleep 8h+ on {n} nights', well.filter(w => (w.sleep ?? 0) >= 8).length, [1, 5, 14, 30, 60, 100]),
+    ach('habits', '', 'Habit Hero', 'Tick off {n} habits', hlogs.length, [5, 25, 50, 100, 250, 500]),
+    ach('gardener', '', 'Gardener', 'Grow {n} habits to Bloom', habitStats(habits, hlogs, now).filter(x => x.level.index >= 3).length, [1, 2, 3, 4, 5, 6]),
+    ach('earlybird', '', 'Early Bird', 'Start {n} focus sessions before 8am', focus.filter(f => hourOf(f.start) < 8).length, [1, 5, 10, 25, 50, 100]),
+    ach('nightowl', '', 'Night Owl', 'Start {n} focus sessions after 9pm', focus.filter(f => hourOf(f.start) >= 21).length, [1, 5, 10, 25, 50, 100]),
   ]
 
   const habitStatList = habitStats(habits, hlogs, now)

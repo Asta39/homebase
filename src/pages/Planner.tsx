@@ -4,6 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db, getSetting, setSetting, type CalEvent } from '../lib/db'
 import { buildPlan, summarize, weakness, PLANNER_DEFAULTS, type Block, type PlannerSettings } from '../lib/planner'
 import { confirmBox, notify } from '../components/Dialog'
+import Art from '../components/Art'
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const ORDER = [1, 2, 3, 4, 5, 6, 0]
@@ -60,7 +61,7 @@ export default function Planner() {
       </div>
 
       {noDate.length > 0 && <div className="panel p-4 text-sm border-amber-500/50">
-        ⚠️ No exam date for <b>{noDate.map(s => s.name).join(', ')}</b>. Set dates on each subject page in <Link className="text-[var(--accent)]" to="/study">Study</Link> so the plan knows what's urgent.
+        <Art name="warning" size={20} className="align-text-bottom mr-1" />No exam date for <b>{noDate.map(s => s.name).join(', ')}</b>. Set dates on each subject page in <Link className="text-[var(--accent)]" to="/study">Study</Link> so the plan knows what's urgent.
       </div>}
 
       <section className="panel p-5 space-y-3">

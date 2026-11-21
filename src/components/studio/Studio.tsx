@@ -5,12 +5,13 @@ import Quiz from './Quiz'
 import Summary from './Summary'
 import MindMap from './MindMap'
 import AudioOverview from './AudioOverview'
+import Art from '../Art'
 
 const TOOLS = [
-  { id: 'quiz', icon: '❓', label: 'Quiz' },
-  { id: 'summary', icon: '📄', label: 'Revision sheet' },
-  { id: 'mindmap', icon: '🧠', label: 'Mind map' },
-  { id: 'audio', icon: '🎧', label: 'Audio overview' },
+  { id: 'quiz', icon: 'quiz', label: 'Quiz' },
+  { id: 'summary', icon: 'document', label: 'Revision sheet' },
+  { id: 'mindmap', icon: 'mindmap', label: 'Mind map' },
+  { id: 'audio', icon: 'headphones', label: 'Audio overview' },
 ] as const
 type Tool = typeof TOOLS[number]['id']
 
@@ -40,7 +41,7 @@ export default function Studio({ subjectId, subjectName }: { subjectId: number; 
         {TOOLS.map(t => (
           <button key={t.id} onClick={() => setTool(t.id)}
             className={`panel p-3 text-left transition ${tool === t.id ? '!border-[var(--accent)] ring-1 ring-[var(--accent)]' : 'hover:bg-[var(--line)]'}`}>
-            <div className="text-xl">{t.icon}</div><div className="text-sm font-medium mt-1">{t.label}</div>
+            <Art name={t.icon} size={34} className="mx-auto" /><div className="text-sm font-medium mt-1">{t.label}</div>
           </button>
         ))}
       </div>

@@ -95,7 +95,7 @@ export function startTicker() {
       await log(state.focusMin)
       const long = round % 4 === 0 // every 4th break is long
       const ms = (long ? state.breakMin * 3 : state.breakMin) * 6e4
-      chime(false); notify('Focus done 🎉', `Take a ${long ? 'long ' : ''}${ms / 6e4}-minute break.`)
+      chime(false); notify('Focus done', `Take a ${long ? 'long ' : ''}${ms / 6e4}-minute break.`)
       set({ phase: 'break', round, endsAt: Date.now() + ms, remaining: ms })
     } else {
       chime(true); notify('Break over', 'Back to it — next focus round started.')

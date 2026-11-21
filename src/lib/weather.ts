@@ -34,16 +34,16 @@ export async function getWeather(p: Place): Promise<Weather> {
   }
 }
 
-/** WMO weather code → emoji + label */
+/** WMO weather code → art key + label */
 export function describe(code: number, isDay = true): [string, string] {
-  if (code === 0) return [isDay ? '☀️' : '🌙', 'Clear']
-  if (code <= 2) return [isDay ? '🌤️' : '☁️', 'Partly cloudy']
-  if (code === 3) return ['☁️', 'Cloudy']
-  if (code <= 48) return ['🌫️', 'Fog']
-  if (code <= 57) return ['🌦️', 'Drizzle']
-  if (code <= 67) return ['🌧️', 'Rain']
-  if (code <= 77) return ['🌨️', 'Snow']
-  if (code <= 82) return ['🌧️', 'Showers']
-  if (code <= 86) return ['🌨️', 'Snow showers']
-  return ['⛈️', 'Thunderstorm']
+  if (code === 0) return [isDay ? 'sun' : 'moon', 'Clear']
+  if (code <= 2) return [isDay ? 'partly' : 'cloud', 'Partly cloudy']
+  if (code === 3) return ['cloud', 'Cloudy']
+  if (code <= 48) return ['fog', 'Fog']
+  if (code <= 57) return ['drizzle', 'Drizzle']
+  if (code <= 67) return ['rain', 'Rain']
+  if (code <= 77) return ['snow', 'Snow']
+  if (code <= 82) return ['rain', 'Showers']
+  if (code <= 86) return ['snow', 'Snow showers']
+  return ['storm', 'Thunderstorm']
 }

@@ -4,6 +4,7 @@ import { searchPlaces, type Place } from '../lib/weather'
 import KioskSettings from '../components/KioskSettings'
 import ThemePicker from "../components/ThemePicker"
 import { exportAll, getSetting, importAll, setSetting } from '../lib/db'
+import Art from '../components/Art'
 
 export default function Settings() {
   const [key, setKey] = useState('')
@@ -35,7 +36,7 @@ export default function Settings() {
         <h2 className="font-semibold">Groq API key</h2>
         <p className="muted text-sm">Free at console.groq.com. Stored only on this computer.</p>
         <input className="input" type="password" value={key} onChange={e => { setKey(e.target.value); setSaved(false) }} placeholder="gsk_…" />
-        <button className="btn" onClick={async () => { await setSetting('groqKey', key.trim()); setSaved(true) }}>{saved ? 'Saved ✓' : 'Save'}</button>
+        <button className="btn" onClick={async () => { await setSetting('groqKey', key.trim()); setSaved(true) }}>{saved ? <span className="inline-flex items-center gap-1"><Art name="check" size={16} />Saved</span> : 'Save'}</button>
       </section>
       <KioskSettings />
       <section className="panel p-5 space-y-2">

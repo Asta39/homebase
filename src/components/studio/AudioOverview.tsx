@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { makeAudioScript, type Line } from '../../lib/studio'
 import { notify } from '../Dialog'
 import Thinking from '../Thinking'
+import Art from '../Art'
 
 /** Two-voice revision "podcast" read aloud with the device's built-in voices (free, works offline once written). */
 export default function AudioOverview({ subjectName, source }: { subjectName: string; source: string }) {
@@ -65,7 +66,7 @@ export default function AudioOverview({ subjectName, source }: { subjectName: st
       {lines && <>
         <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--bg)]">
           {playing
-            ? <button className="btn w-24" onClick={stop}>⏸ Pause</button>
+            ? <button className="btn w-24" onClick={stop}><span className="inline-flex items-center gap-1.5"><Art name="pause" size={18} />Pause</span></button>
             : <button className="btn w-24" onClick={() => speakFrom(at >= 0 ? at : 0)} disabled={!voices.length}>▶ {at > 0 ? 'Resume' : 'Play'}</button>}
           <div className="flex-1 h-1.5 rounded-full bg-[var(--line)] overflow-hidden">
             <div className="h-full bg-[var(--accent)] transition-all" style={{ width: `${((at + 1) / lines.length) * 100}%` }} />

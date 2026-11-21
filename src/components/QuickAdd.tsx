@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { MetalFx } from 'metal-fx'
-import { Mic, Plus, Square } from 'lucide-react'
 import { useMode } from "../lib/theme"
 import { apply, describe, parseCommand, transcribe, valid, type Action } from '../lib/quickadd'
 import Thinking from './Thinking'
+import Art from './Art'
 
 /**
  * Floating 🎙️ button + Ctrl/Cmd+K. Speak or type ("Chem homework Thursday 4pm", "add milk and eggs"),
@@ -66,7 +66,7 @@ export default function QuickAdd() {
   const save = async () => {
     const chosen = actions!.filter(x => x.on)
     for (const x of chosen) await apply(x.a)
-    setSaved(`Added ${chosen.length} item${chosen.length === 1 ? '' : 's'} ✓`); setActions(null); setText('')
+    setSaved(`Added ${chosen.length} item${chosen.length === 1 ? '' : 's'}`); setActions(null); setText('')
     setTimeout(() => setOpen(false), 900)
   }
 
@@ -77,7 +77,7 @@ export default function QuickAdd() {
       <MetalFx variant="circle" preset="silver" theme={resolved} paused={!hover}>
         <button onClick={show} title="Quick add (Ctrl+K)" aria-label="Quick add"
           className="w-14 h-14 rounded-full bg-[var(--panel)] text-[var(--text)] shadow-xl flex items-center justify-center transition hover:scale-105">
-          <Mic size={24} strokeWidth={2} />
+          <Art name="mic" size={32} />
         </button>
       </MetalFx>
     </div>
@@ -86,18 +86,18 @@ export default function QuickAdd() {
       <div className="w-full max-w-xl rounded-[20px] overflow-hidden border border-[var(--line)] shadow-[0_30px_80px_-20px_rgba(0,0,0,.55)]"
         style={{ background: 'var(--panel)', backdropFilter: 'blur(30px) saturate(1.4)' }}>
         <form className="flex items-center gap-3 px-5 h-16" onSubmit={e => { e.preventDefault(); understand(text) }}>
-          <Plus size={22} className="muted shrink-0" strokeWidth={2.2} />
+          <Art name="plus" size={26} />
           <input ref={input} className="flex-1 min-w-0 bg-transparent outline-none text-[19px] placeholder:text-[var(--muted)]" value={text}
             onChange={e => setText(e.target.value)} placeholder="Add something…" />
           <button type="button" onClick={toggleMic} aria-label={rec ? 'Stop recording' : 'Speak'} title={rec ? 'Stop' : 'Speak'}
             className={`w-9 h-9 shrink-0 rounded-full grid place-items-center transition ${rec ? 'bg-red-500 text-white' : 'muted hover:bg-[var(--line)] hover:text-[var(--text)]'}`}>
-            {rec ? <Square size={14} fill="currentColor" /> : <Mic size={19} />}
+            {rec ? <Art name="pause" size={24} /> : <Art name="mic" size={24} />}
           </button>
         </form>
 
         {(status || saved || actions || !text) && <div className="border-t border-[var(--line)] px-5 py-4 space-y-3">
           {status && <p className="text-sm muted">{status.endsWith('…') || status.includes('Listening') ? <Thinking state={rec ? 'listening' : 'working'} label={status} /> : status}</p>}
-          {saved && <p className="text-sm text-green-500 font-medium">{saved}</p>}
+          {saved && <p className="text-sm text-green-500 font-medium flex items-center gap-1.5"><Art name="check" size={18} />{saved}</p>}
 
           {actions && <>
             <div className="space-y-1">
@@ -105,7 +105,7 @@ export default function QuickAdd() {
                 <label key={i} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-[var(--line)] transition ${x.on ? '' : 'opacity-45'}`}>
                   <input type="checkbox" className="w-4 h-4 accent-[var(--accent)]" checked={x.on}
                     onChange={() => setActions(actions.map((y, j) => (j === i ? { ...y, on: !y.on } : y)))} />
-                  <span className="text-[15px]">{describe(x.a)}</span>
+                  <Art name={({ event: 'today', shopping: 'cart', meal: 'eat', confusion: 'brain' } as Record<string, string>)[x.a.type] ?? 'plus'} size={24} /><span className="text-[15px]">{describe(x.a)}</span>
                 </label>
               ))}
             </div>

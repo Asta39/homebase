@@ -5,6 +5,7 @@ import { markAnswer } from '../lib/groq'
 import { extractText } from '../lib/extract'
 import { notify } from './Dialog'
 import Thinking from './Thinking'
+import Art from './Art'
 
 const empty = { paper: '', question: '', scheme: '', answer: '' }
 const pct = (a: Pick<Attempt, 'score' | 'max'>) => (a.max ? Math.round((a.score / a.max) * 100) : 0)
@@ -53,7 +54,7 @@ export default function PastPapers({ subjectId, subjectName }: { subjectId: numb
             <span className="muted">{pct(result)}% · {result.paper}</span>
           </div>
           <div className="whitespace-pre-wrap text-sm leading-relaxed">{result.feedback}</div>
-          {pct(result) < 60 && <p className="text-sm muted">📌 Added to this weekend's recap.</p>}
+          {pct(result) < 60 && <p className="text-sm muted flex items-center gap-1.5"><Art name="pin" size={18} /> Added to this weekend's recap.</p>}
           <div className="flex gap-2">
             <button className="btn" onClick={() => { setResult(null); setF({ ...empty, paper: f.paper, scheme: '' }) }}>Next question</button>
             <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)]" onClick={() => setResult(null)}>Edit answer & retry</button>

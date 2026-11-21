@@ -46,10 +46,10 @@ Reply as JSON: {"actions":[...]}` },
 export function describe(a: Action) {
   const day = (d: string) => new Date(d + 'T00:00').toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' })
   switch (a.type) {
-    case 'event': return `📅 ${a.title} — ${day(a.date)}${a.start ? `, ${a.start}${a.end ? `–${a.end}` : ''}` : ' (all day)'}${a.subject ? ` · ${a.subject}` : ''}`
-    case 'shopping': return `🛒 Shopping: ${a.items.join(', ')}`
-    case 'meal': return `🥗 ${a.slot[0].toUpperCase() + a.slot.slice(1)} ${day(a.date)}: ${a.name}`
-    case 'confusion': return `🧠 Recap (${a.subject}): ${a.text}`
+    case 'event': return `${a.title} — ${day(a.date)}${a.start ? `, ${a.start}${a.end ? `–${a.end}` : ''}` : ' (all day)'}${a.subject ? ` · ${a.subject}` : ''}`
+    case 'shopping': return `Shopping: ${a.items.join(', ')}`
+    case 'meal': return `${a.slot[0].toUpperCase() + a.slot.slice(1)} ${day(a.date)}: ${a.name}`
+    case 'confusion': return `Recap (${a.subject}): ${a.text}`
   }
 }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ArrowLeft, ArrowRight, Check, X, CloudSun, Sparkles, MessageCircle } from 'lucide-react'
 import ThemePicker from '../components/ThemePicker'
 import ActivityRings from '../components/ActivityRings'
 import { db, getSetting, setSetting } from '../lib/db'
@@ -9,6 +8,7 @@ import { searchPlaces, type Place } from '../lib/weather'
 import { useTheme } from '../lib/theme'
 import { celebrate } from '../lib/celebrate'
 import type { Ring } from '../lib/gamify'
+import Art from '../components/Art'
 
 const STEPS = [
   { key: 'hello', label: 'Welcome' },
@@ -81,7 +81,7 @@ export default function Welcome() {
               {step === 0 && <>
                 <div className="eyebrow">{now.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' })}</div>
                 <div className="text-5xl font-semibold tracking-tight tabular-nums mt-1">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                <div className="text-lg font-semibold mt-1">{greet}{name.trim() ? `, ${name.trim()}` : ''} 👋</div>
+                <div className="text-lg font-semibold mt-1">{greet}{name.trim() ? `, ${name.trim()}` : ''} <Art name="wave" size={22} className="align-text-bottom" /></div>
               </>}
               {step === 1 && <>
                 <div className="eyebrow">Theme</div>
@@ -90,13 +90,13 @@ export default function Welcome() {
                 <div className="flex gap-2 mt-3">{['Calendar', 'Focus', 'Quiz'].map(t => <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-[var(--accent)] text-white">{t}</span>)}</div>
               </>}
               {step === 2 && <div className="space-y-2.5 text-sm">
-                <div className="eyebrow flex items-center gap-1.5"><MessageCircle size={12} /> Chat with your notes</div>
+                <div className="eyebrow flex items-center gap-1.5"><Art name="chat" size={14} /> Chat with your notes</div>
                 <div className="ml-auto max-w-[85%] w-fit rounded-2xl rounded-br-md px-3 py-2 bg-[var(--accent)] text-white">Why do arteries have thick walls?</div>
                 <div className="max-w-[90%] rounded-2xl rounded-bl-md px-3 py-2 bg-[var(--line)]">Blood leaves the heart at high pressure, so the walls are thick and muscular to withstand it <span className="text-[var(--accent)] font-semibold">[1]</span></div>
               </div>}
               {step === 3 && <>
-                <div className="eyebrow flex items-center gap-1.5"><CloudSun size={12} /> Weather</div>
-                <div className="flex items-center gap-3 mt-1"><span className="text-5xl">⛅</span>
+                <div className="eyebrow flex items-center gap-1.5"><Art name="partly" size={14} /> Weather</div>
+                <div className="flex items-center gap-3 mt-1"><Art name="partly" size={60} />
                   <div><div className="text-4xl font-semibold">24°</div><div className="muted text-sm">{place ? place.name.split(',')[0] : 'Your town'}</div></div></div>
               </>}
               {step === 4 && <>
@@ -162,8 +162,8 @@ export default function Welcome() {
                 <input className="input !py-2.5" type="password" value={key} onChange={e => { setKey(e.target.value); setKeyState('') }} placeholder="gsk_…" />
                 <button className="btn shrink-0" disabled={!key.trim() || keyState === 'checking'} onClick={checkKey}>{keyState === 'checking' ? 'Checking…' : 'Check'}</button>
               </div>
-              {keyState === 'ok' && <p className="mt-3 text-sm text-green-500 flex items-center gap-1.5"><Check size={16} /> Key works. Saved on this computer.</p>}
-              {keyState === 'bad' && <p className="mt-3 text-sm text-red-500 flex items-center gap-1.5"><X size={16} /> That key didn't work. Check it was copied fully.</p>}
+              {keyState === 'ok' && <p className="mt-3 text-sm text-green-500 flex items-center gap-1.5"><Art name="check" size={18} /> Key works. Saved on this computer.</p>}
+              {keyState === 'bad' && <p className="mt-3 text-sm text-red-500 flex items-center gap-1.5"><Art name="close" size={18} /> That key didn't work. Check it was copied fully.</p>}
             </>}
 
             {step === 3 && <>
@@ -177,9 +177,9 @@ export default function Welcome() {
                 {places && (places.length ? places.map(p => {
                   const on = place?.name === p.name
                   return <button key={`${p.lat},${p.lon}`} className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm flex items-center gap-2 transition ${on ? 'bg-[var(--accent)] text-white' : 'hover:bg-[var(--line)]'}`}
-                    onClick={async () => { setPlace(p); await setSetting('weatherPlace', JSON.stringify(p)) }}>{on && <Check size={15} />}{p.name}</button>
+                    onClick={async () => { setPlace(p); await setSetting('weatherPlace', JSON.stringify(p)) }}>{on && <Art name="check" size={16} />}{p.name}</button>
                 }) : <p className="muted text-sm">No places found. Try a nearby city.</p>)}
-                {place && !places && <p className="text-sm flex items-center gap-1.5"><Check size={16} className="text-green-500" /> {place.name}</p>}
+                {place && !places && <p className="text-sm flex items-center gap-1.5"><Art name="check" size={18} /> {place.name}</p>}
               </div>
             </>}
 
@@ -192,7 +192,7 @@ export default function Welcome() {
                     <input type="color" className="w-7 h-7 shrink-0 rounded-full overflow-hidden border-0 p-0 cursor-pointer bg-transparent" value={s.color} onChange={e => db.subjects.update(s.id!, { color: e.target.value })} aria-label={`${s.name} colour`} />
                     <input className="input !bg-transparent !border-transparent focus:!border-[var(--accent)] font-medium min-w-0" value={s.name} onChange={e => db.subjects.update(s.id!, { name: e.target.value })} aria-label="Subject name" />
                     <input type="date" className="input !w-auto text-sm" value={s.examDate ?? ''} onChange={e => db.subjects.update(s.id!, { examDate: e.target.value || undefined })} aria-label={`${s.name} exam date`} />
-                    <button className="muted hover:text-red-500 p-1.5 shrink-0" onClick={() => db.subjects.delete(s.id!)} aria-label={`Remove ${s.name}`}><X size={16} /></button>
+                    <button className="muted hover:text-red-500 p-1.5 shrink-0" onClick={() => db.subjects.delete(s.id!)} aria-label={`Remove ${s.name}`}><Art name="close" size={18} /></button>
                   </div>
                 ))}
               </div>
@@ -206,12 +206,12 @@ export default function Welcome() {
             </>}
 
             {step === 5 && <div className="flex-1 flex flex-col justify-center">
-              <div className="w-14 h-14 rounded-2xl grid place-items-center bg-[var(--accent)] text-white pop"><Sparkles size={28} /></div>
+              <div className="pop"><Art name="party" size={64} /></div>
               <h2 className="welcome-title mt-5">You're all set{name.trim() ? `, ${name.trim()}` : ''}.</h2>
               <p className="muted text-lg mt-2">Drop your notes into a subject, then let the planner fill your week with revision.</p>
               <div className="flex flex-col sm:flex-row gap-2 mt-8">
                 <button className="btn !py-3 !px-6 flex items-center justify-center gap-2" onClick={() => finish(exams.length ? '/planner' : '/study')}>
-                  {exams.length ? 'Make my study plan' : 'Add my notes'} <ArrowRight size={18} /></button>
+                  {exams.length ? 'Make my study plan' : 'Add my notes'} <Art name="arrow" size={20} /></button>
                 <button className="px-6 py-3 rounded-xl hover:bg-[var(--line)] font-medium" onClick={() => finish('/')}>Go to my dashboard</button>
               </div>
               <p className="muted text-sm mt-6">Tip: press <kbd className="px-1.5 py-0.5 rounded-md bg-[var(--line)] text-xs">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded-md bg-[var(--line)] text-xs">K</kbd> anywhere to add things by voice.</p>
@@ -220,13 +220,13 @@ export default function Welcome() {
 
           {step < 5 && (
             <div className="flex items-center gap-3 mt-8 pt-6 border-t border-[var(--line)]">
-              {step > 0 && <button className="flex items-center gap-1.5 text-sm muted hover:text-[var(--text)] px-2 py-2" onClick={() => go(step - 1)}><ArrowLeft size={16} /> Back</button>}
+              {step > 0 && <button className="flex items-center gap-1.5 text-sm muted hover:text-[var(--text)] px-2 py-2" onClick={() => go(step - 1)}><Art name="arrow" size={16} className="rotate-180" /> Back</button>}
               <div className="ml-auto flex items-center gap-3">
                 {(step === 2 || step === 3) && <button className="text-sm muted hover:text-[var(--text)] px-2 py-2" onClick={next}>Skip for now</button>}
                 <button className="btn !py-2.5 !px-6 flex items-center gap-2"
                   disabled={step === 2 && keyState !== 'ok'}
                   onClick={async () => { if (step === 0) await setSetting('name', name.trim()); next() }}>
-                  {step === 0 ? "Let's go" : 'Continue'} <ArrowRight size={17} />
+                  {step === 0 ? "Let's go" : 'Continue'} <Art name="arrow" size={20} />
                 </button>
               </div>
             </div>

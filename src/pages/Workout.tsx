@@ -4,6 +4,7 @@ import { dayStatus, streak, ymd, type DayStatus } from '../lib/workout'
 import { confirmBox, form } from '../components/Dialog'
 import Flame from '../components/Flame'
 import TodayWorkout from '../components/TodayWorkout'
+import Art from '../components/Art'
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const CELL: Record<DayStatus, string> = {
@@ -68,7 +69,7 @@ export default function Workout() {
             {all.filter(w => w.day === d).map(w => (
               <div key={w.id} className="text-sm mb-1 cursor-pointer group flex gap-1" title="Click to remove" onClick={() => remove(w.id!, w.name)}>
                 <span className="flex-1">{w.name} <span className="muted">{w.sets}</span></span>
-                <span className="opacity-0 group-hover:opacity-100 muted">✕</span>
+                <span className="opacity-0 group-hover:opacity-100"><Art name="close" size={16} /></span>
               </div>
             ))}
             {!all.some(w => w.day === d) && <div className="muted text-sm">Rest</div>}

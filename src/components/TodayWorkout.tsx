@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { db, type Workout } from '../lib/db'
 import Flame from './Flame'
 import { setCount, streak, tickSet, ymd } from '../lib/workout'
+import Art from './Art'
 
 /** Today's exercises with one bubble per set. Used on the Workout page and the dashboard. */
 export default function TodayWorkout({ compact = false }: { compact?: boolean }) {
@@ -38,7 +39,7 @@ export default function TodayWorkout({ compact = false }: { compact?: boolean })
                   {Array.from({ length: n }, (_, i) => (
                     <button key={i} aria-label={`Set ${i + 1}`} onClick={() => tickSet(date, w, i + 1)}
                       className={`w-7 h-7 rounded-full text-xs font-semibold transition ${i < d ? 'bg-green-500 text-white' : 'border-2 border-[var(--line)] muted hover:border-green-500'}`}>
-                      {i < d ? '✓' : i + 1}
+                      {i < d ? <Art name="check" size={22} /> : i + 1}
                     </button>
                   ))}
                 </div>
@@ -46,7 +47,7 @@ export default function TodayWorkout({ compact = false }: { compact?: boolean })
             )
           })}
         </div>
-        {finished && <p className="mt-3 text-sm text-green-500 font-medium">Workout done! 💪</p>}
+        {finished && <p className="mt-3 text-sm text-green-500 font-medium flex items-center gap-1.5"><Art name="muscle" size={20} /> Workout done!</p>}
       </>}
     </div>
   )
@@ -60,7 +61,7 @@ function RestDay({ plan, now, streakDays }: { plan: Workout[]; now: Date; streak
   const items = next == null ? [] : plan.filter(w => w.day === next)
   return (
     <div className="flex flex-col items-center text-center gap-1.5 py-2">
-      <div className="text-4xl">🧘</div>
+      <Art name="calm" size={56} className="mx-auto" />
       <div className="font-medium">Rest day</div>
       <div className="text-sm muted">{streakDays ? `Your ${streakDays}-day streak is safe — recover well.` : 'Recovery is part of training.'}</div>
       {next != null ? (

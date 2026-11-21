@@ -4,6 +4,7 @@ import { db, type RAG } from '../lib/db'
 import { parseSyllabus } from '../lib/groq'
 import { confirmBox, form, notify } from './Dialog'
 import Thinking from './Thinking'
+import Art from './Art'
 
 const RAGS: { v: RAG; label: string; cls: string }[] = [
   { v: 'red', label: "Don't know", cls: 'bg-red-500' },
@@ -82,7 +83,7 @@ export default function Syllabus({ subjectId, subjectName }: { subjectId: number
                   className={`w-6 h-6 rounded-full transition ${t.rating === r.v ? `${r.cls} ring-2 ring-offset-2 ring-offset-[var(--panel)] ring-[var(--text)]` : `${r.cls} opacity-25 hover:opacity-70`}`} />
               ))}
             </div>
-            <button className="muted opacity-0 group-hover:opacity-100 text-sm ml-1" title="Remove topic" onClick={() => db.topics.delete(t.id!)}>✕</button>
+            <button className="muted opacity-0 group-hover:opacity-100 text-sm ml-1" title="Remove topic" onClick={() => db.topics.delete(t.id!)}><Art name="close" size={16} /></button>
           </div>
         ))}
       </div>

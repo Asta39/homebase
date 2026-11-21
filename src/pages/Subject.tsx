@@ -13,6 +13,7 @@ import PastPapers from '../components/PastPapers'
 import Studio from '../components/studio/Studio'
 import { askNotes, makeFlashcards, weekendRecap } from '../lib/groq'
 import Thinking from '../components/Thinking'
+import Art from '../components/Art'
 
 const scheduler = fsrs()
 type Tab = 'notes' | 'chat' | 'studio' | 'cards' | 'syllabus' | 'papers' | 'recap'
@@ -169,7 +170,7 @@ export default function Subject() {
               <button className="btn" onClick={() => grade(Rating.Easy)}>Easy</button>
             </div>
           </> : <button className="btn" onClick={() => setFlip(true)}>Show answer</button>}
-        </div> : <p className="muted">No cards due. 🎉</p>}
+        </div> : <p className="muted flex items-center gap-1.5">No cards due. <Art name="party" size={20} /></p>}
       </div>}
 
       {tab === 'studio' && <Studio subjectId={id} subjectName={subject.name} />}

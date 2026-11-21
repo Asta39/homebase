@@ -69,7 +69,7 @@ export function buildPlan(subjects: PlanSubject[], busy: Busy[], cfg: PlannerSet
     const hours = cfg.week[d.getDay()]
     const dayStr = ymd(d)
     const examsToday = pool.filter(s => s.examDate === dayStr)
-    examsToday.forEach(s => blocks.push({ title: `📝 ${s.name} exam`, start: d, end: d, subjectId: s.id, kind: 'exam' }))
+    examsToday.forEach(s => blocks.push({ title: `${s.name} exam`, start: d, end: d, subjectId: s.id, kind: 'exam' }))
     if (!hours || examsToday.length) continue // no studying on exam days
 
     // Slots for the day, skipping anything already on the calendar and anything in the past
@@ -84,7 +84,7 @@ export function buildPlan(subjects: PlanSubject[], busy: Busy[], cfg: PlannerSet
     const tomorrowExam = pool.find(s => s.examDate === ymd(new Date(+d + DAY)))
     slots.forEach((slot, i) => {
       if (cfg.weekendRecap && i === 0 && (d.getDay() === 0 || d.getDay() === 6)) {
-        blocks.push({ ...slot, title: '🧠 Weekend recap — things I didn’t get', kind: 'recap' }); return
+        blocks.push({ ...slot, title: 'Weekend recap — things I didn’t get', kind: 'recap' }); return
       }
       // Day before an exam: only that subject, light review
       let s = tomorrowExam
@@ -99,7 +99,7 @@ export function buildPlan(subjects: PlanSubject[], busy: Busy[], cfg: PlannerSet
         s = live.reduce((a, b) => (score(b) > score(a) ? b : a))
       }
       const topic = tomorrowExam ? 'final review & past paper' : nextTopic(s.id)
-      blocks.push({ ...slot, title: `📚 ${s.name}${topic ? `: ${topic}` : ''}`, subjectId: s.id, kind: 'study' })
+      blocks.push({ ...slot, title: `${s.name}${topic ? `: ${topic}` : ''}`, subjectId: s.id, kind: 'study' })
       given.set(s.id, (given.get(s.id) ?? 0) + 1)
       last = s.id
       taken.push(slot)

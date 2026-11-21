@@ -6,6 +6,7 @@ import { MOODS } from '../lib/wellbeing'
 import { getSetting, setSetting } from '../lib/db'
 import { notify } from '../components/Dialog'
 import Thinking from '../components/Thinking'
+import Art from '../components/Art'
 
 const h = (min: number) => (min >= 60 ? `${Math.floor(min / 60)}h ${String(Math.round(min % 60)).padStart(2, '0')}m` : `${Math.round(min)}m`)
 
@@ -53,9 +54,9 @@ export default function Report() {
     <div className="max-w-4xl mx-auto space-y-4">
       <div className="flex items-center gap-2 flex-wrap">
         <h1 className="text-2xl font-bold mr-auto">Weekly report</h1>
-        <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" onClick={() => shift(-1)} aria-label="Previous week">‹</button>
+        <button className="w-8 h-8 rounded-full hover:bg-[var(--line)]" onClick={() => shift(-1)} aria-label="Previous week"><Art name="arrow" size={18} className="rotate-180 mx-auto" /></button>
         <span className="font-medium tabular-nums">{range}{isThisWeek && <span className="muted text-sm"> (so far)</span>}</span>
-        <button className="w-8 h-8 rounded-full hover:bg-[var(--line)] disabled:opacity-30" onClick={() => shift(1)} disabled={isThisWeek} aria-label="Next week">›</button>
+        <button className="w-8 h-8 rounded-full hover:bg-[var(--line)] disabled:opacity-30" onClick={() => shift(1)} disabled={isThisWeek} aria-label="Next week"><Art name="arrow" size={18} className="mx-auto" /></button>
         <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={() => window.print()}>Print</button>
       </div>
 
@@ -69,7 +70,7 @@ export default function Report() {
             {note
               ? <div className="prose-sheet text-sm" dangerouslySetInnerHTML={{ __html: md(note) }} />
               : <p className="muted text-sm">Grades effort, not ability: time studied vs your plan, practice, workouts, habits and sleep.</p>}
-            <button className="text-sm text-[var(--accent)]" onClick={writeNote} disabled={busy}>{busy ? <Thinking state="composing" label="Writing…" /> : note ? '↻ Rewrite coach note' : '✨ Get a coach note'}</button>
+            <button className="text-sm text-[var(--accent)]" onClick={writeNote} disabled={busy}>{busy ? <Thinking state="composing" label="Writing…" /> : note ? <span className="inline-flex items-center gap-1"><Art name="refresh" size={16} />Rewrite coach note</span> : <span className="inline-flex items-center gap-1"><Art name="level" size={16} />Get a coach note</span>}</button>
           </div>
         </section>
 
@@ -89,7 +90,7 @@ export default function Report() {
                 <div className="flex-1 h-3 rounded-full bg-[var(--line)] overflow-hidden"><div className="h-full rounded-full" style={{ width: `${(b.min / maxMin) * 100}%`, background: b.color }} /></div>
                 <span className="w-16 text-right tabular-nums muted">{h(b.min)}</span>
               </div>
-            )) : <p className="muted text-sm">No focus sessions logged. Use 🍅 Focus while studying so it counts here.</p>}
+            )) : <p className="muted text-sm">No focus sessions logged. Use Focus while studying so it counts here.</p>}
           </section>
 
           <section className="panel p-5 space-y-3">
@@ -101,7 +102,7 @@ export default function Report() {
             <div>
               <div className="text-sm text-red-500 font-medium mb-1">Still red ({s.red.length})</div>
               {s.red.length ? <ul className="text-sm space-y-0.5">{s.red.slice(0, 6).map((t, i) => <li key={i}>{t.subject}: {t.title}</li>)}{s.red.length > 6 && <li className="muted">+{s.red.length - 6} more</li>}</ul>
-                : <p className="muted text-sm">None 🎉</p>}
+                : <p className="muted text-sm flex items-center gap-1.5">None <Art name="party" size={18} /></p>}
             </div>
             <p className="muted text-xs">{s.flagged} thing{s.flagged === 1 ? '' : 's'} flagged for the weekend recap this week.</p>
           </section>
@@ -110,8 +111,8 @@ export default function Report() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <Tile label="Workouts" value={`${s.workoutDays}/${s.workoutPlanned}`} sub={<span className="muted text-xs">{s.setsDone} sets</span>} />
           <Tile label="Sleep" value={s.sleep != null ? `${s.sleep.toFixed(1)}h` : '–'} sub={prev.sleep != null && s.sleep != null ? <Delta now={s.sleep} prev={prev.sleep} /> : <span className="muted text-xs">avg per night</span>} />
-          <Tile label="Mood" value={s.mood ? MOODS[Math.round(s.mood) - 1] : '–'} sub={<span className="muted text-xs">average</span>} />
-          <Tile label="Habits" value={s.habitPct != null ? `${s.habitPct}%` : '–'} sub={<span className="muted text-xs">{s.water != null ? `💧 ${s.water.toFixed(1)} glasses/day` : 'done'}</span>} />
+          <Tile label="Mood" value={s.mood ? <Art name={MOODS[Math.round(s.mood) - 1]} size={34} /> : '–'} sub={<span className="muted text-xs">average</span>} />
+          <Tile label="Habits" value={s.habitPct != null ? `${s.habitPct}%` : '–'} sub={<span className="muted text-xs">{s.water != null ? <span className="inline-flex items-center gap-1"><Art name="water" size={14} />{s.water.toFixed(1)} glasses/day</span> : 'done'}</span>} />
         </div>
       </>}
     </div>

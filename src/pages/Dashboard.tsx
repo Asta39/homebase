@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { BorderBeam } from 'border-beam'
 import { useMode } from "../lib/theme"
-import { ChevronRight, Sparkles, Trophy, CalendarClock, GraduationCap, Layers } from 'lucide-react'
 import { db } from '../lib/db'
 import { ymd as iso } from '../lib/workout' // local date, not UTC
 import { achDesc, gameState, type Ring } from '../lib/gamify'
@@ -65,11 +64,11 @@ export default function Dashboard() {
                 <Flame size={18} className={game.streak ? 'drop-shadow-[0_1px_1px_rgba(0,0,0,.25)]' : 'grayscale opacity-60'} />{game.streak}<span className="font-medium opacity-90">day{game.streak === 1 ? '' : 's'}</span></Link>
               <Link to="/trophies" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold bg-sky-500/15 text-sky-500" title="Gems"><Art name="gem" size={18} />{game.gems}</Link>
               {game.freezes > 0 && <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sky-400/15 text-xs" title="Streak freezes"><Art name="freeze" size={18} />{game.freezes}</span>}
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold" style={{ background: `${game.league.color}26`, color: `color-mix(in srgb, ${game.league.color} 70%, var(--text))` }}>🏅 {game.league.name}</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold" style={{ background: `${game.league.color}26`, color: `color-mix(in srgb, ${game.league.color} 70%, var(--text))` }}><Art name="medal" size={18} />{game.league.name}</span>
             </div>
             <div>
               <div className="flex items-center gap-2 text-sm">
-                <span className="font-semibold">{game.goalMet ? 'Daily goal reached ✓' : 'Daily goal'}</span>
+                <span className="font-semibold">{game.goalMet ? <span className="inline-flex items-center gap-1">Daily goal reached <Art name="check" size={16} /></span> : 'Daily goal'}</span>
                 <span className="ml-auto muted tabular-nums">{game.xpToday} / {game.dailyGoal} XP</span>
               </div>
               <div className="h-2.5 rounded-full bg-[var(--line)] mt-1.5 overflow-hidden">
@@ -77,7 +76,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="flex items-center gap-2 text-xs muted">
-              <span className="inline-flex items-center gap-1 font-semibold text-[var(--text)]"><Sparkles size={12} /> Level {game.level}</span>
+              <span className="inline-flex items-center gap-1 font-semibold text-[var(--text)]"><Art name="level" size={14} /> Level {game.level}</span>
               <span>{game.title}</span>
               <div className="flex-1 h-1.5 rounded-full bg-[var(--line)] overflow-hidden"><div className="h-full rounded-full bg-[var(--accent)]" style={{ width: `${(game.into / game.need) * 100}%` }} /></div>
               <span className="tabular-nums">{game.into}/{game.need}</span>
@@ -100,11 +99,11 @@ export default function Dashboard() {
           <BorderBeam theme={resolved} size="line" colorVariant="ocean" strength={0.7} active={!!happening} className="flex-1 flex" style={{ display: "flex" }}>
             <section className="glass relative p-6 flex-1 flex flex-col min-w-0">
               <Decor item={6} corner="br" size={66} rotate={10} />
-              <div className="flex items-center mb-4"><CalendarClock size={18} className="mr-2 text-[var(--accent)]" /><h2 className="font-semibold">Today</h2>
-                <Link to="/calendar" className="ml-auto text-sm text-[var(--accent)] flex items-center">Calendar <ChevronRight size={16} /></Link></div>
+              <div className="flex items-center mb-4"><Art name="today" size={26} className="mr-2" /><h2 className="font-semibold">Today</h2>
+                <Link to="/calendar" className="ml-auto text-sm text-[var(--accent)] flex items-center">Calendar <Art name="arrow" size={14} className="ml-1" /></Link></div>
               {events.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 py-2">
-                  <div className="text-4xl">🌤️</div>
+                  <Art name="partly" size={56} />
                   <div className="font-medium">A free day</div>
                   <div className="text-sm muted">Nothing on the calendar yet.</div>
                   <Link to="/planner" className="mt-1 text-sm font-medium px-3 py-1.5 rounded-full bg-[var(--line)] hover:bg-[var(--accent)] hover:text-white transition">Plan some study</Link>
@@ -131,13 +130,13 @@ export default function Dashboard() {
 
         {/* ---------- Daily quests ---------- */}
         <section className="glass relative p-6 md:col-span-3 xl:col-span-4">
-          <div className="flex items-center mb-4"><Trophy size={18} className="mr-2 text-amber-500" /><h2 className="font-semibold">Daily quests</h2>
+          <div className="flex items-center mb-4"><Art name="quests" size={26} className="mr-2" /><h2 className="font-semibold">Daily quests</h2>
           <Decor item={3} corner="tl" size={60} rotate={-14} />
             {game && <span className="ml-auto text-sm muted tabular-nums">{game.quests.filter(q => q.done).length}/3</span>}</div>
           <div className="space-y-3">
             {game?.quests.map(q => (
               <Link key={q.id} to={q.to} className="flex items-center gap-3 group">
-                <span className={`w-9 h-9 rounded-xl grid place-items-center text-lg shrink-0 ${q.done ? 'bg-green-500/20' : 'bg-[var(--line)]'}`}>{q.done ? '✅' : q.icon}</span>
+                <span className={`w-9 h-9 rounded-xl grid place-items-center text-lg shrink-0 ${q.done ? 'bg-green-500/20' : 'bg-[var(--line)]'}`}><Art name={q.done ? 'check' : q.icon} size={26} /></span>
                 <span className="flex-1 min-w-0">
                   <span className={`block text-sm truncate ${q.done ? 'line-through muted' : 'font-medium'}`}>{q.title}</span>
                   <span className="block h-1.5 rounded-full bg-[var(--line)] mt-1.5 overflow-hidden">
@@ -153,7 +152,7 @@ export default function Dashboard() {
         {/* ---------- Exam countdown ---------- */}
         <section className="glass relative p-6 md:col-span-3 xl:col-span-3 flex flex-col">
           <Decor item={2} corner="tr" size={60} rotate={18} />
-          <div className="flex items-center"><GraduationCap size={18} className="mr-2 text-orange-500" /><h2 className="font-semibold">Next exam</h2></div>
+          <div className="flex items-center"><Art name="gradcap" size={26} className="mr-2" /><h2 className="font-semibold">Next exam</h2></div>
           {nextExam ? <>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-7xl font-bold tracking-tight grad-text tabular-nums leading-none">{days}</span>
@@ -166,21 +165,21 @@ export default function Dashboard() {
                   <span className="ml-auto tabular-nums">{Math.round((+new Date(s.examDate + 'T00:00') - +new Date(today + 'T00:00')) / 864e5)}d</span></div>
               ))}
             </div>
-          </> : <Link to="/study" className="mt-3 text-sm text-[var(--accent)]">Add exam dates →</Link>}
+          </> : <Link to="/study" className="mt-3 text-sm text-[var(--accent)] inline-flex items-center gap-1">Add exam dates <Art name="arrow" size={14} /></Link>}
         </section>
 
         {/* ---------- Study snapshot ---------- */}
         <section className="glass relative p-6 md:col-span-3 xl:col-span-4">
           <Decor item={7} corner="tl" size={58} rotate={-20} />
-          <div className="flex items-center mb-4"><Layers size={18} className="mr-2 text-[var(--accent)]" /><h2 className="font-semibold">Study</h2>
-            <Link to="/study" className="ml-auto text-sm text-[var(--accent)] flex items-center">Subjects <ChevronRight size={16} /></Link></div>
+          <div className="flex items-center mb-4"><Art name="cards" size={26} className="mr-2" /><h2 className="font-semibold">Study</h2>
+            <Link to="/study" className="ml-auto text-sm text-[var(--accent)] flex items-center">Subjects <Art name="arrow" size={14} className="ml-1" /></Link></div>
           <div className="grid grid-cols-3 gap-2 text-center">
             <Stat value={due} label="cards due" tone={due ? 'text-[var(--accent)]' : ''} />
             <Stat value={red} label="red topics" tone={red ? 'text-red-500' : ''} />
             <Stat value={game ? fmtMin(game.focusToday) : '–'} label="focused" />
           </div>
-          {(isWeekend && recap > 0) && <Link to="/study" className="mt-4 flex items-center gap-2 text-sm rounded-xl bg-[var(--accent)]/10 px-3 py-2">🧠 {recap} thing{recap === 1 ? '' : 's'} to recap this weekend <ChevronRight size={14} className="ml-auto" /></Link>}
-          {(isWeekend || now.getDay() === 1) && <Link to={now.getDay() === 1 ? '/report?last=1' : '/report'} className="mt-2 flex items-center gap-2 text-sm rounded-xl bg-orange-500/10 px-3 py-2">📊 {now.getDay() === 1 ? 'Last week’s' : 'This week’s'} report is ready <ChevronRight size={14} className="ml-auto" /></Link>}
+          {(isWeekend && recap > 0) && <Link to="/study" className="mt-4 flex items-center gap-2 text-sm rounded-xl bg-[var(--accent)]/10 px-3 py-2"><Art name="brain" size={20} /> {recap} thing{recap === 1 ? '' : 's'} to recap this weekend <Art name="arrow" size={14} className="ml-auto" /></Link>}
+          {(isWeekend || now.getDay() === 1) && <Link to={now.getDay() === 1 ? '/report?last=1' : '/report'} className="mt-2 flex items-center gap-2 text-sm rounded-xl bg-orange-500/10 px-3 py-2"><Art name="chart" size={20} /> {now.getDay() === 1 ? 'Last week’s' : 'This week’s'} report is ready <Art name="arrow" size={14} className="ml-auto" /></Link>}
         </section>
 
         <section className="glass relative p-6 md:col-span-3 xl:col-span-4"><Decor item={5} corner="bl" size={70} rotate={-12} /><TodayWorkout compact /></section>
@@ -190,7 +189,7 @@ export default function Dashboard() {
         <section className="glass relative p-6 md:col-span-6 xl:col-span-4">
           <Decor item={9} corner="br" size={60} rotate={-8} />
           <div className="flex items-center mb-3"><h2 className="font-semibold">Meals</h2>
-            <Link to="/meals" className="ml-auto text-sm text-[var(--accent)] flex items-center">Plan <ChevronRight size={16} /></Link></div>
+            <Link to="/meals" className="ml-auto text-sm text-[var(--accent)] flex items-center">Plan <Art name="arrow" size={14} className="ml-1" /></Link></div>
           {(['breakfast', 'lunch', 'dinner'] as const).map(slot => {
             const m = meals.find(x => x.slot === slot)
             return <div key={slot} className="flex py-1.5 border-b border-[var(--line)] last:border-0 text-sm">
@@ -202,15 +201,15 @@ export default function Dashboard() {
         {game && <section className="glass relative p-6 md:col-span-6 xl:col-span-12">
           <Decor item={4} corner="tr" size={92} rotate={8} />
           <Decor item={11} corner="bl" size={62} rotate={-16} />
-          <div className="flex items-center mb-4"><Trophy size={18} className="mr-2 text-orange-500" /><h2 className="font-semibold">Achievements</h2>
+          <div className="flex items-center mb-4"><Art name="medal" size={26} className="mr-2" /><h2 className="font-semibold">Achievements</h2>
             <span className="ml-3 text-sm muted hidden sm:inline">{game.achievements.filter(a => a.tier).length} of {game.achievements.length} unlocked · {game.xp.toLocaleString()} XP total</span>
-            <Link to="/trophies" className="ml-auto text-sm text-[var(--accent)] flex items-center">All trophies <ChevronRight size={16} /></Link></div>
+            <Link to="/trophies" className="ml-auto text-sm text-[var(--accent)] flex items-center">All trophies <Art name="arrow" size={14} className="ml-1" /></Link></div>
           <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
             {[...game.achievements].sort((x, y) => (y.next ? (y.value - y.prev) / (y.next - y.prev) + y.tier : -1) - (x.next ? (x.value - x.prev) / (x.next - x.prev) + x.tier : -1)).slice(0, 9).map(a => (
               <Link to="/trophies" key={a.id} title={`${a.title}: ${achDesc(a)}`} className="flex flex-col items-center text-center gap-1.5">
                 <Medal a={a} size={60} />
                 <div className={`text-xs font-medium leading-tight ${a.tier ? '' : 'muted'}`}>{a.title}</div>
-                <div className="text-[10px] muted tabular-nums">{a.next ? `${a.value}/${a.next}` : 'Legend ★'}</div>
+                <div className="text-[10px] muted tabular-nums">{a.next ? `${a.value}/${a.next}` : <span className="inline-flex items-center gap-0.5">Legend <Art name="star" size={11} /></span>}</div>
               </Link>
             ))}
           </div>
@@ -225,9 +224,9 @@ function RingRow({ r }: { r: Ring }) {
   return (
     <div>
       {/* Mix toward the text colour so lime/cyan stay readable on light glass, and still glow on dark */}
-      <div className="text-sm font-semibold" style={{ color: `color-mix(in srgb, ${r.colors[0]} 55%, var(--text))` }}>{r.label}{done && ' ✓'}</div>
+      <div className="text-sm font-semibold" style={{ color: `color-mix(in srgb, ${r.colors[0]} 55%, var(--text))` }}><span className="inline-flex items-center gap-1">{r.label}{done && <Art name="check" size={14} />}</span></div>
       <div className="text-xl font-semibold tabular-nums leading-tight">
-        {r.key === 'move' && r.unit === 'rest day' ? <span className="text-base">Rest day 😌</span>
+        {r.key === 'move' && r.unit === 'rest day' ? <span className="text-base inline-flex items-center gap-1.5">Rest day <Art name="calm" size={20} /></span>
           : r.key === 'mind' ? <>{r.value}<span className="text-sm muted">%</span></>
           : <>{r.value}<span className="text-sm muted">/{r.goal} {r.unit}</span></>}
       </div>

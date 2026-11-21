@@ -2,8 +2,9 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { Link } from 'react-router-dom'
 import { db } from '../lib/db'
 import { ymd } from '../lib/workout'
-import { MOODS, SLEEP_GOAL, WATER_GOAL } from '../lib/wellbeing'
+import { MOODS, MOOD_LABELS, SLEEP_GOAL, WATER_GOAL } from '../lib/wellbeing'
 import CheckIn from '../components/CheckIn'
+import Art from '../components/Art'
 
 const DAYS = 14
 
@@ -23,7 +24,7 @@ export default function Wellbeing() {
   const good = both.filter(r => r.sleep! >= SLEEP_GOAL), short = both.filter(r => r.sleep! < 7)
   const avg = (a: typeof both) => a.reduce((t, r) => t + r.mood!, 0) / a.length
   const insight = good.length >= 2 && short.length >= 2 && avg(good) - avg(short) >= 0.5
-    ? `On days after 8h+ sleep your mood averages ${MOODS[Math.round(avg(good)) - 1]}, vs ${MOODS[Math.round(avg(short)) - 1]} after under 7h.` : null
+    ? `On days after 8h+ sleep your mood averages ${MOOD_LABELS[Math.round(avg(good)) - 1].toLowerCase()}, vs ${MOOD_LABELS[Math.round(avg(short)) - 1].toLowerCase()} after under 7h.` : null
 
   const bar = (v: number, max: number, cls: string, label: string) => (
     <div className="flex-1 flex flex-col items-center justify-end h-24 gap-1" title={label}>
@@ -41,16 +42,16 @@ export default function Wellbeing() {
           <h2 className="font-semibold">Last 2 weeks</h2>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div><div className="text-2xl font-semibold">{avgSleep ? `${avgSleep.toFixed(1)}h` : '–'}</div><div className="muted">avg sleep</div></div>
-            <div><div className="text-2xl">{avgMood ? MOODS[Math.round(avgMood) - 1] : '–'}</div><div className="muted">avg mood</div></div>
+            <div><div className="text-2xl">{avgMood ? <Art name={MOODS[Math.round(avgMood) - 1]} size={34} /> : '–'}</div><div className="muted">avg mood</div></div>
           </div>
-          {insight && <p className="text-sm rounded-lg bg-[var(--accent)]/10 p-2">💡 {insight}</p>}
+          {insight && <p className="text-sm rounded-lg bg-[var(--accent)]/10 p-2 flex items-start gap-2"><Art name="bulb" size={22} /><span>{insight}</span></p>}
           <p className="muted text-xs">Exams go better with sleep: aim for {SLEEP_GOAL}–10 hours and {WATER_GOAL} glasses of water.</p>
         </section>
       </div>
 
       <section className="panel p-5 space-y-5">
         <div>
-          <div className="text-sm font-medium mb-1">😴 Sleep <span className="muted font-normal">· line = {SLEEP_GOAL}h</span></div>
+          <div className="text-sm font-medium mb-1 flex items-center gap-1.5"><Art name="sleep" size={20} /> Sleep <span className="muted font-normal">· line = {SLEEP_GOAL}h</span></div>
           <div className="relative">
             <div className="absolute inset-x-0 border-t border-dashed border-[var(--muted)] opacity-50" style={{ bottom: `${(SLEEP_GOAL / 12) * 96}px` }} />
             <div className="flex gap-1">{dates.map(d => { const s = get(d)?.sleep ?? 0; return <div key={ymd(d)} className="flex-1 flex">{bar(s, 12, s && s < 7 ? 'bg-amber-500' : 'bg-indigo-500', `${s}h`)}</div> })}</div>
@@ -58,13 +59,13 @@ export default function Wellbeing() {
           {dayLabels}
         </div>
         <div>
-          <div className="text-sm font-medium mb-1">💧 Water</div>
+          <div className="text-sm font-medium mb-1 flex items-center gap-1.5"><Art name="water" size={20} /> Water</div>
           <div className="flex gap-1">{dates.map(d => { const w = get(d)?.water ?? 0; return <div key={ymd(d)} className="flex-1 flex">{bar(w, WATER_GOAL, w >= WATER_GOAL ? 'bg-sky-400' : 'bg-sky-400/50', `${w} glasses`)}</div> })}</div>
           {dayLabels}
         </div>
         <div>
-          <div className="text-sm font-medium mb-1">🙂 Mood</div>
-          <div className="flex gap-1">{dates.map(d => <span key={ymd(d)} className="flex-1 text-center text-lg">{get(d)?.mood ? MOODS[get(d)!.mood! - 1] : <span className="muted text-xs">·</span>}</span>)}</div>
+          <div className="text-sm font-medium mb-1 flex items-center gap-1.5"><Art name="mood-4" size={20} /> Mood</div>
+          <div className="flex gap-1">{dates.map(d => <span key={ymd(d)} className="flex-1 text-center text-lg">{get(d)?.mood ? <Art name={MOODS[get(d)!.mood! - 1]} size={22} className="mx-auto" /> : <span className="muted text-xs">·</span>}</span>)}</div>
         </div>
       </section>
 
@@ -74,7 +75,7 @@ export default function Wellbeing() {
           <div className="font-semibold">Habits</div>
           <div className="text-sm muted">{habits.length ? `${habits.length} habit${habits.length === 1 ? '' : 's'} growing · streaks, levels and gems` : 'Build small daily habits that grow from seeds into oaks'}</div>
         </div>
-        <span className="muted">›</span>
+        <Art name="arrow" size={18} />
       </Link>
     </div>
   )

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Check, Pencil, Plus, Trash2 } from 'lucide-react'
 import { db, type Habit } from '../lib/db'
 import { ymd } from '../lib/workout'
 import { toggleHabit, STARTER_HABITS } from '../lib/wellbeing'
@@ -8,6 +7,7 @@ import { HABIT_COLORS, HABIT_ICONS, HABIT_LEVELS, iconFor, SCHEDULES, habitStats
 import { XP_RULES } from '../lib/gamify'
 import { confirmBox, form } from '../components/Dialog'
 import HabitIcon from '../components/HabitIcon'
+import Art from '../components/Art'
 
 const Img = ({ src, size }: { src: string; size: number }) =>
   <img src={`${import.meta.env.BASE_URL}${src}.png`} alt="" style={{ width: size, height: size }} className="object-contain shrink-0" />
@@ -87,7 +87,7 @@ export default function Habits() {
             {week.map(d => {
               const k = ymd(d), on = perfect.has(k), isToday = k === today
               return <div key={k} className="flex flex-col items-center gap-1">
-                <div className={`w-7 h-7 rounded-full grid place-items-center text-[11px] font-bold ${on ? 'bg-[#34c759] text-white' : isToday ? 'border-2 border-dashed border-[var(--line)]' : 'bg-[var(--line)]'}`}>{on ? <Check size={14} strokeWidth={3} /> : ''}</div>
+                <div className={`w-7 h-7 rounded-full grid place-items-center text-[11px] font-bold ${on ? 'bg-[#34c759] text-white' : isToday ? 'border-2 border-dashed border-[var(--line)]' : 'bg-[var(--line)]'}`}>{on ? <Art name="check" size={26} /> : ''}</div>
                 <span className={`text-[10px] ${isToday ? 'font-bold' : 'muted'}`}>{'SMTWTFS'[d.getDay()]}</span>
               </div>
             })}
@@ -104,7 +104,7 @@ export default function Habits() {
       <section className="space-y-2">
         <div className="flex items-center px-1">
           <h2 className="font-semibold">Today</h2>
-          <button className="btn text-sm ml-auto flex items-center gap-1" onClick={() => edit()}><Plus size={16} /> Habit</button>
+          <button className="btn text-sm ml-auto flex items-center gap-1" onClick={() => edit()}><Art name="plus" size={18} /> Habit</button>
         </div>
         {!habits.length && <div className="panel p-6 text-center space-y-3">
           <HabitIcon name="stage-1" size={64} className="mx-auto" />
@@ -160,7 +160,7 @@ function Tile({ s, pop, onTick }: { s: HabitStat; pop?: number; onTick: () => vo
       </div>
       <div className="w-8 h-8 rounded-full grid place-items-center shrink-0 transition"
         style={s.doneToday ? { background: c, color: '#fff' } : { border: '2px solid var(--line)' }}>
-        {s.doneToday && <Check size={18} strokeWidth={3} />}
+        {s.doneToday && <Art name="check" size={30} />}
       </div>
       {pop && <span key={`x${pop}`} className="habit-xp absolute right-4 -top-1 text-sm font-bold pointer-events-none" style={{ color: c }}>+{XP_RULES.habit} XP</span>}
     </button>
@@ -184,8 +184,8 @@ function GardenCard({ s, onEdit, onRemove }: { s: HabitStat; onEdit: () => void;
           <div className="font-semibold truncate">{s.habit.name}</div>
           <div className="text-xs muted">{scheduleLabel(s.habit)}</div>
         </div>
-        <button className="w-8 h-8 rounded-full grid place-items-center muted hover:bg-[var(--line)] opacity-0 group-hover:opacity-100 focus:opacity-100" onClick={onEdit} aria-label="Edit"><Pencil size={15} /></button>
-        <button className="w-8 h-8 rounded-full grid place-items-center muted hover:bg-[var(--line)] opacity-0 group-hover:opacity-100 focus:opacity-100" onClick={onRemove} aria-label="Remove"><Trash2 size={15} /></button>
+        <button className="w-8 h-8 rounded-full grid place-items-center muted hover:bg-[var(--line)] opacity-0 group-hover:opacity-100 focus:opacity-100" onClick={onEdit} aria-label="Edit"><Art name="pencil" size={20} /></button>
+        <button className="w-8 h-8 rounded-full grid place-items-center muted hover:bg-[var(--line)] opacity-0 group-hover:opacity-100 focus:opacity-100" onClick={onRemove} aria-label="Remove"><Art name="trash" size={20} /></button>
       </div>
 
       {/* Level */}

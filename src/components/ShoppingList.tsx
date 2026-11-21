@@ -4,6 +4,7 @@ import { db } from '../lib/db'
 import { AISLES, cookWith, shoppingFromMeals } from '../lib/groq'
 import { confirmBox, form, notify } from './Dialog'
 import Thinking from './Thinking'
+import Art from './Art'
 
 /** Shopping list: auto-built from the week's meals, plus anything added by hand. */
 export default function ShoppingList({ meals }: { meals: string[] }) {
@@ -63,7 +64,7 @@ export default function ShoppingList({ meals }: { meals: string[] }) {
         <h2 className="font-semibold">Shopping list</h2>
         <span className="muted text-sm">{left} to buy</span>
         <div className="ml-auto flex flex-wrap gap-2">
-          <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={ideasFor} disabled={!!busy}>🍳 Cook with…</button>
+          <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={ideasFor} disabled={!!busy}><span className="inline-flex items-center gap-1.5"><Art name="pan" size={20} />Cook with…</span></button>
           {left > 0 && <button className="px-3 py-1.5 rounded-lg hover:bg-[var(--line)] text-sm" onClick={copy}>Copy</button>}
           <button className="btn text-sm" onClick={generate} disabled={!!busy || !meals.length}
             title={meals.length ? '' : 'Plan some meals first'}>{busy ? <Thinking onAccent state="working" label={busy} /> : 'Build from meals'}</button>
@@ -83,7 +84,7 @@ export default function ShoppingList({ meals }: { meals: string[] }) {
               <label key={i.id} className="flex items-center gap-3 py-1 group cursor-pointer">
                 <input type="checkbox" className="w-4 h-4 accent-[var(--accent)]" checked={i.done} onChange={() => db.shopping.update(i.id!, { done: !i.done })} />
                 <span className={`flex-1 ${i.done ? 'line-through muted' : ''}`}>{i.name}{i.qty && <span className="muted"> · {i.qty}</span>}</span>
-                <button type="button" className="muted opacity-0 group-hover:opacity-100 text-sm" onClick={e => { e.preventDefault(); db.shopping.delete(i.id!) }}>✕</button>
+                <button type="button" className="muted opacity-0 group-hover:opacity-100 text-sm" onClick={e => { e.preventDefault(); db.shopping.delete(i.id!) }} aria-label="Remove"><Art name="close" size={18} /></button>
               </label>
             ))}
           </div>
@@ -94,7 +95,7 @@ export default function ShoppingList({ meals }: { meals: string[] }) {
       }}>Clear ticked items</button>}
 
       {ideas && <div className="border-t border-[var(--line)] pt-3">
-        <div className="flex justify-between"><h3 className="font-semibold">Meal ideas</h3><button className="muted text-sm" onClick={() => setIdeas('')}>✕</button></div>
+        <div className="flex justify-between"><h3 className="font-semibold">Meal ideas</h3><button className="muted text-sm" onClick={() => setIdeas('')} aria-label="Close"><Art name="close" size={20} /></button></div>
         <div className="whitespace-pre-wrap text-sm mt-1">{ideas}</div>
       </div>}
     </section>

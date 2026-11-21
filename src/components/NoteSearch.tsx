@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ensureIndexed, search, words, type Hit } from '../lib/rag'
 import Thinking from './Thinking'
+import Art from './Art'
 
 /** Search notes by meaning, not just exact words. Runs fully on this device, no API key needed. */
 export default function NoteSearch({ subjectId, disabled }: { subjectId: number; disabled: boolean }) {
@@ -30,9 +31,10 @@ export default function NoteSearch({ subjectId, disabled }: { subjectId: number;
 
   return (
     <div className="space-y-2">
-      <form onSubmit={run} className="flex gap-2">
+      <form onSubmit={run} className="flex gap-2 items-center">
+        <Art name="search" size={30} />
         <input className="input" disabled={disabled} value={q} onChange={e => { setQ(e.target.value); if (!e.target.value) setHits(null) }}
-          placeholder={disabled ? 'Add notes to search them' : '🔍 Search your notes by meaning, e.g. "how do plants make food"'} />
+          placeholder={disabled ? 'Add notes to search them' : 'Search your notes by meaning, e.g. "how do plants make food"'} />
         <button className="btn" disabled={disabled || !!status || !q.trim()}>Search</button>
       </form>
       {status && <p className="muted text-sm"><Thinking state="searching" label={status} /></p>}

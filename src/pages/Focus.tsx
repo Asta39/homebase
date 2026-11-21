@@ -4,6 +4,7 @@ import { useMode } from "../lib/theme"
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../lib/db'
 import { askNotificationPermission, fmt, pause, resume, skipBreak, start, stop, timeLeft, useFocus } from '../lib/focus'
+import Art from '../components/Art'
 
 const PRESETS = [[25, 5], [45, 10], [50, 10], [15, 3]] as const
 const dayStart = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.toISOString() }
@@ -55,7 +56,7 @@ export default function Focus() {
             <div className="muted text-sm uppercase tracking-wide">{s.phase === 'idle' ? 'Ready' : s.phase === 'break' ? (s.round % 4 === 0 ? 'Long break' : 'Break') : s.paused ? 'Paused' : 'Focus'}</div>
             <div className="text-6xl font-semibold tabular-nums">{fmt(s.phase === 'idle' ? PRESETS[preset][0] * 6e4 : left)}</div>
             {s.phase !== 'idle' && <div className="muted text-sm mt-1 max-w-48 truncate">{subject?.name ?? 'General'}{s.topic ? ` · ${s.topic}` : ''}</div>}
-            {s.round > 0 && <div className="text-sm mt-1">{'🍅'.repeat(Math.min(s.round, 8))}</div>}
+            {s.round > 0 && <div className="flex justify-center gap-0.5 mt-1">{Array.from({ length: Math.min(s.round, 8) }, (_, i) => <Art key={i} name="tomato" size={18} />)}</div>}
           </div>
         </div>
 

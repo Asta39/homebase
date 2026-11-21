@@ -67,7 +67,7 @@ export default function Calendar() {
           {a.timeText && !a.event.allDay && <div className="ios-ev-t">{a.timeText}</div>}<div className="ios-ev-n">{a.event.title}</div></div>}
         height="100%" nowIndicator editable selectable selectMirror firstDay={1}
         slotMinTime="06:00:00" slotMaxTime="23:00:00" scrollTime="07:00:00" expandRows
-        events={events.map(e => ({ id: String(e.id), title: e.title, start: e.start, end: e.end, allDay: e.allDay, backgroundColor: color(e.subjectId) }))}
+        events={events.map(e => ({ id: String(e.id), title: e.title.replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, ''), start: e.start, end: e.end, allDay: e.allDay, backgroundColor: color(e.subjectId) }))}
         eventDrop={move} eventResize={move} select={add} eventClick={edit}
       />
     </div>

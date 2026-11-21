@@ -1,14 +1,14 @@
-import { Check, Monitor, Moon, Sun } from 'lucide-react'
 import { THEMES, setMode, setTheme, useMode, useTheme, type Mode } from '../lib/theme'
+import Art from './Art'
 
 /** Three big preview tiles. Classic shows the live warm gradient; the others show their wallpaper + a few cut-outs. */
 export default function ThemePicker({ bare = false }: { bare?: boolean }) {
   const active = useTheme()
   const { mode } = useMode()
-  const MODES: { id: Mode; label: string; icon: typeof Sun; hint: string }[] = [
-    { id: 'auto', label: 'Auto', icon: Monitor, hint: active.darkByDefault ? `${active.name} looks best dark` : 'Follows Windows' },
-    { id: 'light', label: 'Light', icon: Sun, hint: '' },
-    { id: 'dark', label: 'Dark', icon: Moon, hint: '' },
+  const MODES: { id: Mode; label: string; icon: string; hint: string }[] = [
+    { id: 'auto', label: 'Auto', icon: 'monitor', hint: active.darkByDefault ? `${active.name} looks best dark` : 'Follows Windows' },
+    { id: 'light', label: 'Light', icon: 'sun', hint: '' },
+    { id: 'dark', label: 'Dark', icon: 'moon', hint: '' },
   ]
   return (
     <section className={bare ? 'space-y-3' : 'panel p-5 space-y-3'}>
@@ -32,7 +32,7 @@ export default function ThemePicker({ bare = false }: { bare?: boolean }) {
                 ))}
               </div>
               <div className="p-3 bg-[var(--glass)]">
-                <div className="font-semibold flex items-center gap-1.5">{t.name}{on && <Check size={16} className="text-[var(--accent)]" />}</div>
+                <div className="font-semibold flex items-center gap-1.5">{t.name}{on && <Art name="check" size={18} />}</div>
                 <div className="text-xs muted">{t.tagline}</div>
               </div>
             </button>
@@ -47,7 +47,7 @@ export default function ThemePicker({ bare = false }: { bare?: boolean }) {
             return (
               <button key={m.id} role="radio" aria-checked={on} onClick={() => setMode(m.id)}
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm transition ${on ? 'bg-[var(--glass)] shadow font-semibold' : 'muted hover:text-[var(--text)]'}`}>
-                <m.icon size={15} />{m.label}
+                <Art name={m.icon} size={18} />{m.label}
               </button>
             )
           })}

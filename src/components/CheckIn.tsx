@@ -4,6 +4,7 @@ import { db } from '../lib/db'
 import { ymd } from '../lib/workout'
 import { dueOn } from '../lib/habits'
 import HabitIcon from './HabitIcon'
+import Art from './Art'
 import { MOODS, MOOD_LABELS, SLEEP_GOAL, WATER_GOAL, toggleHabit, updateDay } from '../lib/wellbeing'
 
 /** Today's check-in: mood, sleep, water, habits. Big tap targets so it works on a kitchen touchscreen. */
@@ -19,7 +20,7 @@ export default function CheckIn({ compact = false }: { compact?: boolean }) {
     <div className={compact ? 'grid gap-x-8 gap-y-3 lg:grid-cols-3 items-center' : 'panel p-5 space-y-4'}>
       <div className="flex items-baseline col-span-full">
         <h2 className="font-semibold">{compact ? 'Wellbeing' : 'Today’s check-in'}</h2>
-        {compact && <Link to="/wellbeing" className="ml-auto text-xs text-[var(--accent)]">Trends →</Link>}
+        {compact && <Link to="/wellbeing" className="ml-auto text-xs text-[var(--accent)] inline-flex items-center gap-1">Trends <Art name="arrow" size={12} /></Link>}
       </div>
 
       <div>
@@ -27,13 +28,13 @@ export default function CheckIn({ compact = false }: { compact?: boolean }) {
         <div className="flex justify-between gap-1">
           {MOODS.map((m, i) => (
             <button key={i} title={MOOD_LABELS[i]} onClick={() => updateDay(date, { mood: day?.mood === i + 1 ? undefined : i + 1 })}
-              className={`text-2xl rounded-xl px-2 py-1 transition ${day?.mood === i + 1 ? 'bg-[var(--accent)]/20 scale-110' : day?.mood ? 'opacity-35 hover:opacity-80' : 'hover:bg-[var(--line)]'}`}>{m}</button>
+              className={`rounded-xl p-1 transition ${day?.mood === i + 1 ? 'bg-[var(--accent)]/20 scale-110' : day?.mood ? 'opacity-35 hover:opacity-80' : 'hover:bg-[var(--line)]'}`}><Art name={m} size={34} /></button>
           ))}
         </div>
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-lg">💧</span>
+        <Art name="water" size={26} />
         <div className="flex gap-1 flex-1 min-w-0">
           {Array.from({ length: WATER_GOAL }, (_, i) => (
             <button key={i} aria-label={`${i + 1} glasses`} onClick={() => updateDay(date, { water: water === i + 1 ? i : i + 1 })}
@@ -44,7 +45,7 @@ export default function CheckIn({ compact = false }: { compact?: boolean }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-lg">😴</span>
+        <Art name="sleep" size={26} />
         <button className="w-7 h-7 rounded-full hover:bg-[var(--line)]" aria-label="Less sleep" onClick={() => updateDay(date, { sleep: Math.max(0, (day?.sleep ?? SLEEP_GOAL) - 0.5) })}>−</button>
         <span className={`tabular-nums font-semibold w-12 text-center ${day?.sleep == null ? 'muted' : day.sleep < 7 ? 'text-amber-500' : ''}`}>{day?.sleep == null ? '–' : `${day.sleep}h`}</span>
         <button className="w-7 h-7 rounded-full hover:bg-[var(--line)]" aria-label="More sleep" onClick={() => updateDay(date, { sleep: Math.min(14, (day?.sleep ?? SLEEP_GOAL - 0.5) + 0.5) })}>+</button>

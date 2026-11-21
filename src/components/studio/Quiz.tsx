@@ -4,6 +4,7 @@ import { db } from '../../lib/db'
 import { makeQuiz, type QuizQ } from '../../lib/studio'
 import { notify } from '../Dialog'
 import Thinking from '../Thinking'
+import Art from '../Art'
 
 const LETTERS = 'ABCD'
 
@@ -45,7 +46,7 @@ export default function Quiz({ subjectId, subjectName, source }: { subjectId: nu
     const pct = Math.round((score / qs.length) * 100)
     return (
       <div className="text-center space-y-3 py-4">
-        <div className="text-5xl">{pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '📚'}</div>
+        <Art name={pct >= 80 ? 'quests' : pct >= 50 ? 'thumbsup' : 'books'} size={72} className="mx-auto" />
         <div className="text-3xl font-bold">{score}/{qs.length}</div>
         <p className="muted">{pct >= 80 ? 'Excellent — you know this.' : pct >= 50 ? 'Good going. Missed ones are in your weekend recap.' : 'Worth another look. Missed ones are in your weekend recap.'}</p>
         <div className="flex gap-2 justify-center">

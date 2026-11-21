@@ -2,7 +2,8 @@ import { db, type DayCheck } from './db'
 
 export const WATER_GOAL = 8 // glasses
 export const SLEEP_GOAL = 8 // hours — teenagers need 8–10
-export const MOODS = ['😫', '😕', '😐', '🙂', '😄'] as const
+/** Art keys (public/ui/mood-N.png) */
+export const MOODS = ['mood-1', 'mood-2', 'mood-3', 'mood-4', 'mood-5'] as const
 export const MOOD_LABELS = ['Awful', 'Low', 'Okay', 'Good', 'Great'] as const
 
 export async function updateDay(date: string, patch: Partial<Omit<DayCheck, 'date'>>) {
