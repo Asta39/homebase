@@ -1,0 +1,40 @@
+# Builds the Windows installer (.exe + .msi) on GitHub's Windows machines.
+# Run it: push a tag like v0.1.0  (git tag v0.1.0 && git push --tags)
+# or click "Run workflow" on the Actions tab. Output: a draft GitHub Release.
+name: Windows release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - run: npm ci
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || 'v__VERSION__' }}
+          releaseName: Homebase v__VERSION__
+          releaseBody: Download the .exe below and run it. No admin rights needed.
+          releaseDraft: true

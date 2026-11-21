@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/* Warm neutral system. --line is translucent so tracks, hovers and dividers sit naturally on glass. */
+:root {
+  --bg: #f5f2ed; --panel: #ffffff; --text: #1d1b19; --muted: #77716a; --line: rgba(70, 50, 30, .11); --accent: #0a84ff;
+  --field: rgba(255, 255, 255, .7); --field-line: rgba(70, 50, 30, .14);
+  font-family: -apple-system, "SF Pro Text", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: light dark;
+}
+/* dark mode (set by the app: Light / Dark / Auto) */
+:root[data-mode="dark"] { --bg: #121110; --panel: #1c1b1a; --text: #f4f1ec; --muted: #a39d95; --line: rgba(255, 245, 230, .09);
+    --field: rgba(0, 0, 0, .28); --field-line: rgba(255, 245, 230, .10); }
+body { margin: 0; background: var(--bg); color: var(--text); }
+
+/* Every card in the app is frosted glass over the wallpaper */
+.panel { background: var(--glass); border: 1px solid var(--glass-line); border-radius: 22px; box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(24px) saturate(170%); -webkit-backdrop-filter: blur(24px) saturate(170%); }
+.muted { color: var(--muted); }
+.btn { background: var(--accent); color: white; border-radius: 12px; padding: 7px 16px; font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.18); transition: transform .12s, filter .15s, opacity .15s; }
+.btn:hover:not(:disabled) { filter: brightness(1.06); }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn:disabled { opacity: .45; }
+.input { background: var(--field); border: 1px solid var(--field-line); border-radius: 12px; padding: 7px 12px; width: 100%; color: var(--text);
+  transition: border-color .15s, box-shadow .15s; }
+.input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+.input::placeholder { color: var(--muted); }
+
+/* Page titles: large, tight, Apple-style */
+main h1 { font-size: 30px !important; font-weight: 700 !important; letter-spacing: -.02em; }
+
+/* Sidebar sits on the wallpaper as a lighter glass strip */
+aside { background: color-mix(in srgb, var(--glass) 70%, transparent); backdrop-filter: blur(30px) saturate(160%); -webkit-backdrop-filter: blur(30px) saturate(160%); }
+
+/* FullCalendar → Apple Calendar look */
+.fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-neutral-bg-color: transparent; --fc-today-bg-color: color-mix(in srgb, #f97316 9%, transparent); }
+.fc .fc-col-header-cell-cushion, .fc .fc-timegrid-slot-label-cushion { color: var(--muted); font-weight: 500; }
+.fc .fc-toolbar-title { font-size: 1.4rem; font-weight: 700; }
+.fc .fc-button { background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 8px; text-transform: capitalize; }
+.fc .fc-button-active, .fc .fc-button:hover { background: var(--line) !important; color: var(--text) !important; }
+.fc-event { border-radius: 6px; border: none; padding: 1px 4px; font-size: .78rem; }
+.fc .fc-timegrid-now-indicator-line { border-color: #ff3b30; }
+
+/* AI revision sheets (rendered Markdown) */
+.prose-sheet { line-height: 1.6; }
+.prose-sheet h1, .prose-sheet h2 { font-weight: 700; font-size: 1.1rem; margin: 1.1rem 0 .4rem; }
+.prose-sheet h3 { font-weight: 600; margin: .8rem 0 .3rem; }
+.prose-sheet ul, .prose-sheet ol { padding-left: 1.3rem; margin: .3rem 0; }
+.prose-sheet ul { list-style: disc; } .prose-sheet ol { list-style: decimal; }
+.prose-sheet strong { color: var(--accent); }
+.prose-sheet table { border-collapse: collapse; width: 100%; margin: .5rem 0; font-size: .9rem; }
+.prose-sheet th, .prose-sheet td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; }
+.prose-sheet code { background: var(--bg); padding: 0 4px; border-radius: 4px; }
+@media print { aside, button, select { display: none !important; } main { overflow: visible !important; } }
+
+/* ---------- Home dashboard: frosted glass over a time-of-day wallpaper ---------- */
+:root { --glass: rgba(255,255,255,.62); --glass-line: rgba(255,255,255,.7); --glass-shadow: 0 1px 1px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.08); }
+/* dark mode (set by the app: Light / Dark / Auto) */
+:root[data-mode="dark"] { --glass: rgba(32,29,26,.58); --glass-line: rgba(255,255,255,.08); --glass-shadow: 0 8px 30px rgba(0,0,0,.35); }
+.glass { background: var(--glass); border: 1px solid var(--glass-line); border-radius: 28px; box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.wall { position: fixed; inset: 0; z-index: -1; transition: background 2s ease; }
+.wall-morning { background: radial-gradient(1200px 650px at 10% 0%, #f6dcc0 0%, transparent 60%), radial-gradient(900px 600px at 90% 20%, #efe2c8 0%, transparent 55%), #f7f3ec; }
+.wall-day     { background: radial-gradient(1200px 650px at 10% 0%, #e3e8d6 0%, transparent 60%), radial-gradient(900px 600px at 90% 30%, #efe6d4 0%, transparent 55%), #f5f3ee; }
+.wall-evening { background: radial-gradient(1200px 700px at 12% 0%, #f7c39b 0%, transparent 62%), radial-gradient(1000px 650px at 92% 28%, #f2b39c 0%, transparent 58%), radial-gradient(900px 600px at 50% 110%, #f5d6b8 0%, transparent 60%), #f6eee6; }
+.wall-night   { background: radial-gradient(1200px 650px at 15% 0%, #ddd3c7 0%, transparent 60%), radial-gradient(900px 700px at 90% 30%, #e2d6cb 0%, transparent 55%), #efebe6; }
+/* dark mode (set by the app: Light / Dark / Auto) */
+:root[data-mode="dark"] .wall-morning { background: radial-gradient(1200px 650px at 10% 0%, #3a2a1e 0%, transparent 60%), radial-gradient(900px 600px at 90% 20%, #2f2a20 0%, transparent 55%), #141210; }
+:root[data-mode="dark"] .wall-day { background: radial-gradient(1200px 650px at 10% 0%, #232a20 0%, transparent 60%), radial-gradient(900px 600px at 90% 30%, #2c271e 0%, transparent 55%), #131312; }
+:root[data-mode="dark"] .wall-evening { background: radial-gradient(1200px 700px at 12% 0%, #4d2a15 0%, transparent 62%), radial-gradient(1000px 650px at 92% 28%, #45231a 0%, transparent 58%), radial-gradient(900px 600px at 50% 110%, #3a2414 0%, transparent 60%), #140f0c; }
+:root[data-mode="dark"] .wall-night { background: radial-gradient(1200px 650px at 15% 0%, #2a2420 0%, transparent 60%), radial-gradient(900px 700px at 90% 30%, #2b2118 0%, transparent 55%), #121110; }
+.grad-text { background: linear-gradient(135deg, #e8743b, #c2410c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0 } 60% { transform: scale(1.08); opacity: 1 } 100% { transform: scale(1) } }
+.pop { animation: pop .5s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .pop { animation: none } .wall { transition: none } }
+
+/* ---------- Playful themes ---------- */
+.wall-image { background-size: cover; background-position: center; }
+/* Scrim: keeps the wallpaper visible around the edges but calms it so cards read clearly */
+.wall-image::after { content: ''; position: absolute; inset: 0; }
+/* Cut-outs sit still (no hover motion) and shrink with the window so they never crowd small screens */
+.decor { filter: drop-shadow(0 6px 10px rgba(0,0,0,.28)); }
+:root { --deco-scale: 1; }
+@media (max-width: 1279px) { :root { --deco-scale: .82; } }
+@media (max-width: 1023px) { :root { --deco-scale: .66; } }
+@media (max-width: 767px)  { :root { --deco-scale: .5; } }
+
+/* ---------- Cherry Glam: cards are tinted from the wallpaper so they blend instead of clashing ---------- */
+[data-theme="glam"] { --accent: #c8102e; }
+/* Dark (default for Glam): espresso glass */
+:root[data-mode="dark"][data-theme="glam"] {
+  --bg: #120a07; --panel: #1c120e; --text: #f6eee8; --muted: #b9a79a; --line: rgba(255, 225, 205, .10);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(255, 225, 205, .12);
+  --glass: rgba(24, 14, 10, .80); --glass-line: rgba(255, 220, 200, .10); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .45);
+  --accent: #e0263f;
+}
+:root[data-mode="dark"][data-theme="glam"] .wall-image::after { background: linear-gradient(180deg, rgba(10,4,2,.45), rgba(10,4,2,.62)); }
+:root[data-mode="dark"][data-theme="glam"] aside { background: rgba(20, 11, 8, .80); }
+/* Light: caramel latte glass (warm, picks up the tan in the print — not plain cream) */
+:root[data-mode="light"][data-theme="glam"] {
+  --text: #2a1710; --muted: #7a5a48; --line: rgba(90, 50, 25, .14);
+  --field: rgba(255, 244, 232, .55); --field-line: rgba(90, 50, 25, .18);
+  --glass: rgba(236, 210, 182, .80); --glass-line: rgba(255, 240, 225, .55); --glass-shadow: 0 10px 34px rgba(40, 18, 6, .28);
+}
+:root[data-mode="light"][data-theme="glam"] .wall-image::after { background: linear-gradient(180deg, rgba(40,18,6,.10), rgba(40,18,6,.28)); }
+:root[data-mode="light"][data-theme="glam"] aside { background: rgba(232, 204, 176, .80); }
+
+/* ---------- Kitty: rose-tinted glass that melts into the pink lace ---------- */
+[data-theme="kitty"] { --accent: #e0457b; }
+:root[data-mode="light"][data-theme="kitty"] {
+  --text: #3a1f2b; --muted: #8d5d70; --line: rgba(190, 70, 110, .14);
+  --field: rgba(255, 245, 249, .55); --field-line: rgba(190, 70, 110, .18);
+  --glass: rgba(252, 222, 232, .66); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(150, 50, 90, .16);
+}
+:root[data-mode="light"][data-theme="kitty"] .wall-image::after { background: rgba(255, 228, 238, .14); }
+:root[data-mode="light"][data-theme="kitty"] aside { background: rgba(252, 222, 232, .62); }
+:root[data-mode="dark"][data-theme="kitty"] {
+  --bg: #1a0d13; --panel: #26131c; --text: #fbeef3; --muted: #c8a3b2; --line: rgba(255, 190, 215, .10);
+  --field: rgba(0, 0, 0, .28); --field-line: rgba(255, 190, 215, .12);
+  --glass: rgba(56, 24, 38, .74); --glass-line: rgba(255, 200, 220, .12); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .45);
+  --accent: #ff6a9e;
+}
+:root[data-mode="dark"][data-theme="kitty"] .wall-image::after { background: linear-gradient(180deg, rgba(30,10,18,.50), rgba(30,10,18,.64)); }
+:root[data-mode="dark"][data-theme="kitty"] aside { background: rgba(44, 20, 30, .80); }
+
+/* ---------- Midnight Blue: navy glass that sinks into the denim, feathers and roses ---------- */
+[data-theme="blue"] { --accent: #4f7cff; }
+:root[data-mode="dark"][data-theme="blue"] {
+  --bg: #070b16; --panel: #0f1626; --text: #eef2fb; --muted: #9fabc6; --line: rgba(190, 210, 255, .10);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(190, 210, 255, .13);
+  --glass: rgba(11, 18, 36, .78); --glass-line: rgba(170, 195, 255, .12); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .5);
+  --accent: #6b93ff;
+}
+:root[data-mode="dark"][data-theme="blue"] .wall-image::after { background: linear-gradient(180deg, rgba(4,8,20,.40), rgba(4,8,20,.58)); }
+:root[data-mode="dark"][data-theme="blue"] aside { background: rgba(9, 14, 30, .82); }
+:root[data-mode="light"][data-theme="blue"] {
+  --text: #10182e; --muted: #56627f; --line: rgba(30, 60, 140, .14);
+  --field: rgba(240, 245, 255, .55); --field-line: rgba(30, 60, 140, .18);
+  --glass: rgba(214, 226, 248, .78); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(10, 25, 70, .28);
+  --accent: #2f5de6;
+}
+:root[data-mode="light"][data-theme="blue"] .wall-image::after { background: linear-gradient(180deg, rgba(10,20,50,.10), rgba(10,20,50,.26)); }
+:root[data-mode="light"][data-theme="blue"] aside { background: rgba(210, 222, 246, .80); }
+
+/* ---------- Page decorations (playful themes) ----------
+   Cut-outs on cards across every page, drawn from the theme's 12 objects (--d0…--d11).
+   Every 3rd card gets one on its top edge, every 4th one at the bottom, cycling through objects and corners,
+   so screens feel scattered rather than repeated. Never blocks clicks. */
+[data-theme="glam"]  { --d0: url(/themes/glam/cherries.png); --d1: url(/themes/glam/bow.png); --d2: url(/themes/glam/star.png); --d3: url(/themes/glam/kiss.png); --d4: url(/themes/glam/eightball.png); --d5: url(/themes/glam/leopard-kiss.png); --d6: url(/themes/glam/bolt.png); --d7: url(/themes/glam/red-bow.png); --d8: url(/themes/glam/glitter-star.png); --d9: url(/themes/glam/rose.png); --d10: url(/themes/glam/perfume.png); --d11: url(/themes/glam/heart.png); }
+[data-theme="kitty"] { --d0: url(/themes/kitty/cherries.png); --d1: url(/themes/kitty/bow.png); --d2: url(/themes/kitty/star.png); --d3: url(/themes/kitty/lace-heart.png); --d4: url(/themes/kitty/kitten.png); --d5: url(/themes/kitty/leopard-bow.png); --d6: url(/themes/kitty/butterfly.png); --d7: url(/themes/kitty/disco.png); --d8: url(/themes/kitty/shell.png); --d9: url(/themes/kitty/macaron.png); --d10: url(/themes/kitty/flower.png); --d11: url(/themes/kitty/heart.png); }
+[data-theme="blue"]  { --d0: url(/themes/blue/leopard-bow.png); --d1: url(/themes/blue/navy-bow.png); --d2: url(/themes/blue/glitter-star.png); --d3: url(/themes/blue/kiss.png); --d4: url(/themes/blue/ball.png); --d5: url(/themes/blue/turtle.png); --d6: url(/themes/blue/disco.png); --d7: url(/themes/blue/shell.png); --d8: url(/themes/blue/starfish.png); --d9: url(/themes/blue/flower.png); --d10: url(/themes/blue/butterfly.png); --d11: url(/themes/blue/jellyfish.png); }
+
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) :is(main .panel, form.panel) { position: relative; }
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) :is(main .panel:nth-of-type(3n+1), form.panel)::after,
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(4n+3)::before {
+  content: ''; position: absolute; width: 60px; height: 60px; pointer-events: none; z-index: 5; scale: var(--deco-scale);
+  background: center / contain no-repeat; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
+}
+/* top edge: cycles 3 objects × 3 positions */
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(9n+1)::after { background-image: var(--d1); top: -24px; right: -16px; rotate: 14deg; }
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(9n+4)::after { background-image: var(--d6); top: -26px; left: 58%; rotate: -10deg; width: 54px; height: 54px; }
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(9n+7)::after { background-image: var(--d9); top: -22px; left: -18px; rotate: -16deg; }
+/* bottom edge: cycles 3 more */
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(12n+3)::before { background-image: var(--d2); bottom: -22px; left: -18px; rotate: -12deg; width: 54px; height: 54px; }
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(12n+7)::before { background-image: var(--d8); bottom: -20px; right: -14px; rotate: 10deg; }
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main .panel:nth-of-type(12n+11)::before { background-image: var(--d11); bottom: -22px; left: 40%; rotate: 6deg; width: 50px; height: 50px; }
+/* the page's own first card gets the theme's signature bow, bigger */
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) main > div > div > .panel:first-of-type::after { background-image: var(--d0); width: 72px; height: 72px; top: -28px; right: -20px; left: auto; rotate: 12deg; }
+/* dialogs */
+:is([data-theme="glam"], [data-theme="kitty"], [data-theme="blue"]) form.panel::after { background-image: var(--d5); top: -26px; left: -22px; right: auto; rotate: -18deg; width: 70px; height: 70px; }
