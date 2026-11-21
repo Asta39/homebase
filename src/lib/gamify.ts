@@ -1,3 +1,4 @@
+import { dueOn, habitStats } from './habits'
 /**
  * Game layer (Duolingo-style), computed from data the app already stores so it can never drift:
  *  - XP per day from real actions, a daily XP goal, and a 🔥 streak of goal days (saved by ❄️ freezes)
@@ -123,12 +124,13 @@ export async function gameState(now = new Date()) {
   const setsDone = todaysPlan.reduce((t, w) => t + Math.min(setCount(w.sets), wlogs.find(l => l.date === today && l.workoutId === w.id)?.done ?? 0), 0)
   const wToday = well.find(w => w.date === today)
   const water = wToday?.water ?? 0
-  const habitsDone = hlogs.filter(l => l.date === today).length
+  const dueHabits = habits.filter(h => dueOn(h, now))
+  const habitsDone = hlogs.filter(l => l.date === today && dueHabits.some(h => h.id === l.habitId)).length
   const cardsToday = Math.max(reviews.filter(r => r.date === today).length,
     cards.filter(c => { const lr = lastReview(c.fsrs); return lr && new Date(lr) >= dayStart }).length)
   const quizzesToday = quizzes.filter(q => new Date(q.date) >= dayStart)
   const mindVal = Math.round(
-    (habits.length ? 40 * Math.min(1, water / GOALS.water) + 40 * (habitsDone / habits.length) : 80 * Math.min(1, water / GOALS.water))
+    (dueHabits.length ? 40 * Math.min(1, water / GOALS.water) + 40 * (habitsDone / dueHabits.length) : 80 * Math.min(1, water / GOALS.water))
     + (wToday?.mood ? 10 : 0) + (wToday?.sleep != null ? 10 : 0))
   const rings: Ring[] = [
     { key: 'study', label: 'Study', value: focusToday, goal: GOALS.studyMin, unit: 'min', pct: focusToday / GOALS.studyMin, colors: ['#ff2d55', '#ff6482'] },
@@ -143,7 +145,7 @@ export async function gameState(now = new Date()) {
     { id: 'quiz', icon: '❓', title: 'Score 80%+ on a quiz', progress: quizzesToday.some(q => q.score / q.total >= 0.8) ? 1 : 0, goal: 1, xp: 60, done: quizzesToday.some(q => q.score / q.total >= 0.8), to: '/study' },
     { id: 'water', icon: '💧', title: `Drink ${GOALS.water} glasses`, progress: water, goal: GOALS.water, xp: 30, done: water >= GOALS.water, to: '/wellbeing' },
     { id: 'move', icon: '💪', title: setsGoal ? 'Finish today’s workout' : 'Log a check-in', progress: setsGoal ? setsDone : (wToday?.mood ? 1 : 0), goal: setsGoal || 1, xp: 40, done: setsGoal ? setsDone >= setsGoal : !!wToday?.mood, to: setsGoal ? '/workout' : '/wellbeing' },
-    { id: 'habits', icon: '✅', title: 'Tick off every habit', progress: habitsDone, goal: Math.max(1, habits.length), xp: 40, done: habits.length > 0 && habitsDone >= habits.length, to: '/wellbeing' },
+    { id: 'habits', icon: '✅', title: 'Tick off every habit', progress: habitsDone, goal: Math.max(1, dueHabits.length), xp: 40, done: dueHabits.length > 0 && habitsDone >= dueHabits.length, to: '/habits' },
   ]
   const rot = now.getDay()
   const quests = [pool[0], pool[1 + (rot % 2)], pool[3 + (rot % 3)]]
@@ -173,11 +175,14 @@ export async function gameState(now = new Date()) {
     ach('hydrated', '💧', 'Hydrated', 'Hit your water goal on {n} days', well.filter(w => w.water >= GOALS.water).length, [1, 7, 14, 30, 60, 100]),
     ach('rested', '🌙', 'Well Rested', 'Sleep 8h+ on {n} nights', well.filter(w => (w.sleep ?? 0) >= 8).length, [1, 5, 14, 30, 60, 100]),
     ach('habits', '✅', 'Habit Hero', 'Tick off {n} habits', hlogs.length, [5, 25, 50, 100, 250, 500]),
+    ach('gardener', '🌳', 'Gardener', 'Grow {n} habits to Bloom', habitStats(habits, hlogs, now).filter(x => x.level.index >= 3).length, [1, 2, 3, 4, 5, 6]),
     ach('earlybird', '🌅', 'Early Bird', 'Start {n} focus sessions before 8am', focus.filter(f => hourOf(f.start) < 8).length, [1, 5, 10, 25, 50, 100]),
     ach('nightowl', '🦉', 'Night Owl', 'Start {n} focus sessions after 9pm', focus.filter(f => hourOf(f.start) >= 21).length, [1, 5, 10, 25, 50, 100]),
   ]
 
+  const habitStatList = habitStats(habits, hlogs, now)
   return {
+    habitStatList,
     rings, quests, achievements, focusToday, cardsToday,
     xp, ...lvl, xpToday, dailyGoal, goalMet: xpToday >= dailyGoal,
     streak, longest, freezes, frozenDays: frozenSet, metDays: new Set([...byDay.keys()].filter(met)),

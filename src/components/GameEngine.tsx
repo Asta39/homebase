@@ -4,6 +4,7 @@ import { db, getSetting, setSetting, type Reward } from '../lib/db'
 import { gameState, TIER_GEMS, TIER_NAMES, type GameState } from '../lib/gamify'
 import { ymd } from '../lib/workout'
 import { celebrate } from '../lib/celebrate'
+import { STREAK_MILESTONES, HABIT_LEVELS } from '../lib/habits'
 
 const GEMS = { quest: 5, allQuests: 10, level: 20 }
 
@@ -46,6 +47,13 @@ async function award(g: GameState) {
   if (g.quests.every(q => q.done)) give(`allquests:${g.today}`, GEMS.allQuests, 0, 'All daily quests done')
   for (let l = 2; l <= g.level; l++) give(`level:${l}`, GEMS.level, 0, `Reached level ${l}`)
   g.achievements.forEach(a => { for (let t = 1; t <= a.tier; t++) give(`tier:${a.id}:${t}`, TIER_GEMS[t - 1], 0, `${a.title} · ${TIER_NAMES[t - 1]}`) })
+  // Habits: streak milestones (gems), growth stages, and a perfect habit day
+  g.habitStatList.forEach(h => {
+    STREAK_MILESTONES.filter(m => h.streak >= m.days).forEach(m => give(`hstreak:${h.habit.id}:${m.days}`, m.gems, 0, `${h.habit.icon} ${h.habit.name} · ${m.days}-day streak`))
+    for (let i = 1; i <= h.level.index; i++) give(`hlevel:${h.habit.id}:${i}`, 5, 0, `${h.habit.icon} ${h.habit.name} grew into a ${HABIT_LEVELS[i].name} ${HABIT_LEVELS[i].icon}`)
+  })
+  const dueToday = g.habitStatList.filter(h => h.dueToday)
+  if (dueToday.length >= 2 && dueToday.every(h => h.doneToday)) give(`hperfect:${g.today}`, 5, 0, 'Perfect habit day')
   if (g.goalMet) give(`streak:${g.today}`, 0, 0, `Daily goal hit · ${g.streak}-day streak`)
 
   // Streak freezes: look at each missed day since the last check (never today — it isn't over)
@@ -74,12 +82,18 @@ async function award(g: GameState) {
   const streak = fresh.find(r => r.key.startsWith('streak:'))
   const allQ = fresh.find(r => r.key.startsWith('allquests:'))
   const quest = fresh.find(r => r.key.startsWith('quest:'))
+  const hStreak = fresh.filter(r => r.key.startsWith('hstreak:')).at(-1)
+  const hLevel = fresh.filter(r => r.key.startsWith('hlevel:')).at(-1)
+  const hPerfect = fresh.find(r => r.key.startsWith('hperfect:'))
   const gems = fresh.reduce((t, r) => t + r.gems, 0)
   if (usedOn.length) celebrate(`❄️ Streak freeze saved your ${g.streak}-day streak!`, ['#7dd3fc', '#bae6fd', '#ffffff'])
   else if (tier) celebrate(`🏅 ${tier.label} unlocked · +${gems} 💎`, ['#f2b632', '#c86bfa', '#7aa7ff'])
   else if (level) celebrate(`⭐ Level ${level.key.split(':')[1]}! +${gems} 💎`, ['#f59e0b', '#f97316', '#84cc16'])
   else if (streak) celebrate(`🔥 ${g.streak} day streak! Daily goal hit`, ['#ff9500', '#ff3b30', '#ffcc00'])
+  else if (hStreak) celebrate(`🔥 ${hStreak.label}! +${gems} 💎`, ['#ff9500', '#ffcc00', '#ff2d55'])
+  else if (hLevel) celebrate(`${hLevel.label} · +${gems} 💎`, ['#34c759', '#a4ff00', '#ffcc00'])
   else if (allQ) celebrate(`🏆 All quests done! +${gems} 💎`, ['#f59e0b', '#10b981', '#3b82f6'])
+  else if (hPerfect) celebrate(`🌟 Perfect habit day! +${gems} 💎`, ['#34c759', '#ff9500'])
   else if (quest) celebrate(`✅ ${quest.label.replace('Quest: ', '')} · +${quest.xp} XP +${gems} 💎`, ['#10b981', '#f59e0b'])
 }
 

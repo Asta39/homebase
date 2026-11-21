@@ -2,8 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { HashRouter, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import {
   House, CalendarDays, Trophy, BookOpen, CalendarRange, Timer, ChartColumn, Dumbbell, HeartPulse, UtensilsCrossed, Settings as SettingsIcon, Tv,
-  type LucideIcon,
-} from 'lucide-react'
+  ListChecks, type LucideIcon } from 'lucide-react'
 import { getSetting, seedIfEmpty } from './lib/db'
 import { loadKiosk } from './lib/kiosk'
 import { startTicker } from './lib/focus'
@@ -30,6 +29,7 @@ const Settings = lazy(() => import('./pages/Settings'))
 const Kiosk = lazy(() => import('./pages/Kiosk'))
 const Welcome = lazy(() => import('./pages/Welcome'))
 const Trophies = lazy(() => import('./pages/Trophies'))
+const Habits = lazy(() => import('./pages/Habits'))
 
 type Item = { to: string; label: string; icon: LucideIcon }
 const NAV: { heading?: string; items: Item[] }[] = [
@@ -39,7 +39,7 @@ const NAV: { heading?: string; items: Item[] }[] = [
     { to: '/focus', label: 'Focus', icon: Timer }, { to: '/report', label: 'Report', icon: ChartColumn },
   ] },
   { heading: 'Life', items: [
-    { to: '/workout', label: 'Workout', icon: Dumbbell }, { to: '/wellbeing', label: 'Wellbeing', icon: HeartPulse },
+    { to: '/workout', label: 'Workout', icon: Dumbbell }, { to: '/habits', label: 'Habits', icon: ListChecks }, { to: '/wellbeing', label: 'Wellbeing', icon: HeartPulse },
     { to: '/meals', label: 'Meals', icon: UtensilsCrossed },
   ] },
 ]
@@ -118,6 +118,7 @@ function Shell() {
             <Route path="/planner" element={<Planner />} />
             <Route path="/focus" element={<Focus />} />
             <Route path="/workout" element={<Workout />} />
+            <Route path="/habits" element={<Habits />} />
             <Route path="/wellbeing" element={<Wellbeing />} />
             <Route path="/report" element={<Report />} />
             <Route path="/meals" element={<Meals />} />

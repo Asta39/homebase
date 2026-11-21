@@ -1,4 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
+import { Link } from 'react-router-dom'
 import { db } from '../lib/db'
 import { ymd } from '../lib/workout'
 import { MOODS, SLEEP_GOAL, STARTER_HABITS, WATER_GOAL, habitStreak } from '../lib/wellbeing'
@@ -80,33 +81,14 @@ export default function Wellbeing() {
         </div>
       </section>
 
-      <section className="panel p-5">
-        <div className="flex items-center mb-3">
-          <h2 className="font-semibold">Habits</h2>
-          <div className="ml-auto flex gap-2">
-            {!habits.length && <button className="text-sm px-3 py-1.5 rounded-lg hover:bg-[var(--line)]"
-              onClick={() => db.habits.bulkAdd(STARTER_HABITS.map((h, i) => ({ ...h, order: i })))}>Add suggestions</button>}
-            <button className="btn text-sm" onClick={addHabit}>+ Habit</button>
-          </div>
+      <Link to="/habits" className="panel p-5 flex items-center gap-4 hover:brightness-105 transition">
+        <div className="text-3xl">🌱</div>
+        <div className="flex-1">
+          <div className="font-semibold">Habits</div>
+          <div className="text-sm muted">{habits.length ? `${habits.length} habit${habits.length === 1 ? '' : 's'} growing · streaks, levels and gems` : 'Build small daily habits that grow from seeds into oaks'}</div>
         </div>
-        {!habits.length && <p className="muted text-sm">No habits yet. Tick them off each day in the check-in or on the dashboard.</p>}
-        <div className="space-y-2">
-          {habits.map(h => {
-            const set = new Set(logs.filter(l => l.habitId === h.id).map(l => l.date))
-            const s = habitStreak(set, today, ymd)
-            return (
-              <div key={h.id} className="flex items-center gap-3 group">
-                <span className="w-44 truncate text-sm">{h.icon} {h.name}</span>
-                <div className="flex gap-1 flex-1">
-                  {dates.map(d => <div key={ymd(d)} title={d.toLocaleDateString()} className={`flex-1 h-5 rounded ${set.has(ymd(d)) ? 'bg-green-500' : 'bg-[var(--line)]'}`} />)}
-                </div>
-                <span className="w-14 text-right text-sm tabular-nums">{s ? `🔥 ${s}` : ''}</span>
-                <button className="muted text-sm opacity-0 group-hover:opacity-100" onClick={() => removeHabit(h.id!, h.name)}>✕</button>
-              </div>
-            )
-          })}
-        </div>
-      </section>
+        <span className="muted">›</span>
+      </Link>
     </div>
   )
 }

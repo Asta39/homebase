@@ -29,7 +29,7 @@ export interface FocusSession { id?: number; subjectId?: number; topic?: string;
 export interface WorkoutLog { id?: number; date: string; workoutId: number; done: number }
 /** One row per day: sleep, water, mood. */
 export interface DayCheck { date: string; sleep?: number; water: number; mood?: number }
-export interface Habit { id?: number; name: string; icon: string; order: number }
+export interface Habit { id?: number; name: string; icon: string; order: number; color?: string; /** weekdays it's due (0=Sun); empty/undefined = every day */ days?: number[]; created?: string }
 export interface HabitLog { id?: number; date: string; habitId: number }
 export interface QuizResult { id?: number; subjectId: number; score: number; total: number; date: string }
 /** A red/amber/green rating change — lets the weekly report show topics that improved. */
