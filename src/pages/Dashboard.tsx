@@ -6,13 +6,14 @@ import { useMode } from "../lib/theme"
 import { ChevronRight, Sparkles, Trophy, CalendarClock, GraduationCap, Layers, Flame } from 'lucide-react'
 import { db } from '../lib/db'
 import { ymd as iso } from '../lib/workout' // local date, not UTC
-import { gameState, type Ring } from '../lib/gamify'
+import { achDesc, gameState, type Ring } from '../lib/gamify'
 import { celebrate } from '../lib/celebrate'
 import ActivityRings from '../components/ActivityRings'
 import WeatherCard from '../components/WeatherCard'
 import TodayWorkout from '../components/TodayWorkout'
 import CheckIn from '../components/CheckIn'
 import Decor from "../components/Decor"
+import Medal from "../components/Medal"
 
 const greet = (h: number) => (h < 5 ? 'Up late' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening')
 const fmtMin = (m: number) => (m >= 60 ? `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m` : `${m}m`)
@@ -56,14 +57,28 @@ export default function Dashboard() {
             </div>
             <div className="text-2xl font-semibold mt-2">{greet(now.getHours())}{name ? `, ${name}` : ''}</div>
           </div>
-          {game && <div className="mt-5">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500 text-white font-semibold"><Sparkles size={14} /> Level {game.level}</span>
-              <span className="font-medium">{game.title}</span>
-              <span className="ml-auto muted tabular-nums">{game.into} / {game.need} XP</span>
+          {game && <div className="mt-5 space-y-3">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <Link to="/trophies" className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold ${game.streak ? 'bg-orange-500 text-white' : 'bg-[var(--line)] muted'}`} title="Day streak">
+                🔥 {game.streak}<span className="font-medium opacity-90">day{game.streak === 1 ? '' : 's'}</span></Link>
+              <Link to="/trophies" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold bg-sky-500/15 text-sky-500" title="Gems">💎 {game.gems}</Link>
+              {game.freezes > 0 && <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sky-400/15 text-xs" title="Streak freezes">❄️ {game.freezes}</span>}
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold" style={{ background: `${game.league.color}26`, color: `color-mix(in srgb, ${game.league.color} 70%, var(--text))` }}>🏅 {game.league.name}</span>
             </div>
-            <div className="h-2.5 rounded-full bg-[var(--line)] mt-2 overflow-hidden">
-              <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000" style={{ width: `${(game.into / game.need) * 100}%` }} />
+            <div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-semibold">{game.goalMet ? 'Daily goal reached ✓' : 'Daily goal'}</span>
+                <span className="ml-auto muted tabular-nums">{game.xpToday} / {game.dailyGoal} XP</span>
+              </div>
+              <div className="h-2.5 rounded-full bg-[var(--line)] mt-1.5 overflow-hidden">
+                <div className={`h-full rounded-full transition-all duration-1000 ${game.goalMet ? 'bg-green-500' : 'bg-gradient-to-r from-amber-400 to-orange-500'}`} style={{ width: `${Math.min(1, game.xpToday / game.dailyGoal) * 100}%` }} />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-xs muted">
+              <span className="inline-flex items-center gap-1 font-semibold text-[var(--text)]"><Sparkles size={12} /> Level {game.level}</span>
+              <span>{game.title}</span>
+              <div className="flex-1 h-1.5 rounded-full bg-[var(--line)] overflow-hidden"><div className="h-full rounded-full bg-[var(--accent)]" style={{ width: `${(game.into / game.need) * 100}%` }} /></div>
+              <span className="tabular-nums">{game.into}/{game.need}</span>
             </div>
           </div>}
         </section>
@@ -181,23 +196,20 @@ export default function Dashboard() {
           })}
         </section>
 
-        {/* ---------- Badges ---------- */}
+        {/* ---------- Achievements ---------- */}
         {game && <section className="glass relative p-6 md:col-span-6 xl:col-span-12">
           <Decor item={4} corner="tr" size={92} rotate={8} />
           <Decor item={11} corner="bl" size={62} rotate={-16} />
-          <div className="flex items-center mb-4"><Flame size={18} className="mr-2 text-orange-500" /><h2 className="font-semibold">Badges</h2>
-            <span className="ml-auto text-sm muted">{game.badges.filter(b => b.earned).length} of {game.badges.length} earned · {game.xp.toLocaleString()} XP total</span></div>
+          <div className="flex items-center mb-4"><Flame size={18} className="mr-2 text-orange-500" /><h2 className="font-semibold">Achievements</h2>
+            <span className="ml-3 text-sm muted hidden sm:inline">{game.achievements.filter(a => a.tier).length} of {game.achievements.length} unlocked · {game.xp.toLocaleString()} XP total</span>
+            <Link to="/trophies" className="ml-auto text-sm text-[var(--accent)] flex items-center">All trophies <ChevronRight size={16} /></Link></div>
           <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
-            {game.badges.map(b => (
-              <div key={b.id} title={`${b.title}: ${b.desc}`} className="flex flex-col items-center text-center gap-1.5">
-                <div className={`relative w-14 h-14 rounded-full grid place-items-center text-2xl ${b.earned ? 'bg-gradient-to-br from-amber-300 to-orange-500 shadow-lg shadow-orange-500/30 pop' : 'bg-[var(--line)] grayscale opacity-60'}`}>
-                  {b.icon}
-                  {!b.earned && <svg className="absolute inset-0 -rotate-90" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26" fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round"
-                    strokeDasharray={163.4} strokeDashoffset={163.4 * (1 - b.progress / b.goal)} /></svg>}
-                </div>
-                <div className={`text-xs font-medium leading-tight ${b.earned ? '' : 'muted'}`}>{b.title}</div>
-                {!b.earned && <div className="text-[10px] muted tabular-nums">{b.progress}/{b.goal}</div>}
-              </div>
+            {[...game.achievements].sort((x, y) => (y.next ? (y.value - y.prev) / (y.next - y.prev) + y.tier : -1) - (x.next ? (x.value - x.prev) / (x.next - x.prev) + x.tier : -1)).slice(0, 9).map(a => (
+              <Link to="/trophies" key={a.id} title={`${a.title}: ${achDesc(a)}`} className="flex flex-col items-center text-center gap-1.5">
+                <Medal a={a} size={60} />
+                <div className={`text-xs font-medium leading-tight ${a.tier ? '' : 'muted'}`}>{a.title}</div>
+                <div className="text-[10px] muted tabular-nums">{a.next ? `${a.value}/${a.next}` : 'Legend ★'}</div>
+              </Link>
             ))}
           </div>
         </section>}
@@ -234,12 +246,10 @@ function useCelebrations(rings: Ring[] | undefined, level: number | undefined, t
     const write = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* ignore */ } }
     const key = `homebase.rings.${today}`
     const closed = new Set((read(key) ?? '').split(',').filter(Boolean))
-    const lastLevel = Number(read('homebase.level') ?? level)
     const newlyClosed = rings.filter(r => r.pct >= 1 && r.unit !== 'rest day' && !closed.has(r.key))
     // On first load just record state (no confetti for things done earlier)
     if (!first.current) {
-      if (level > lastLevel) celebrate(`Level ${level}! 🎉`, ['#f59e0b', '#f97316', '#84cc16'])
-      else if (newlyClosed.length) celebrate(`${newlyClosed[0].label} ring closed!`, newlyClosed[0].colors)
+      if (newlyClosed.length) celebrate(`${newlyClosed[0].label} ring closed!`, newlyClosed[0].colors)
     }
     first.current = false
     newlyClosed.forEach(r => closed.add(r.key))

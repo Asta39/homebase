@@ -33,6 +33,15 @@ export interface Habit { id?: number; name: string; icon: string; order: number 
 export interface HabitLog { id?: number; date: string; habitId: number }
 export interface QuizResult { id?: number; subjectId: number; score: number; total: number; date: string }
 /** A red/amber/green rating change — lets the weekly report show topics that improved. */
+/** One flashcard review (dated, so it can count toward that day's XP). */
+export interface ReviewLog { id?: number; date: string; subjectId: number; grade: number }
+/**
+ * Game ledger. Each row is awarded exactly once (unique key), e.g. "quest:2026-11-21:focus", "tier:wildfire:3", "level:4".
+ * gems can be negative (shop purchases); xp is bonus XP counted on that date.
+ */
+export interface Reward { key: string; date: string; gems: number; xp: number; label: string }
+/** A day the streak was saved by a streak freeze. */
+export interface FreezeDay { date: string }
 export interface TopicChange { id?: number; topicId: number; subjectId: number; from: RAG; to: RAG; date: string }
 /** A marked past-paper question attempt */
 export interface Attempt {
@@ -60,6 +69,9 @@ export const db = new Dexie('homebase') as Dexie & {
   habitLog: EntityTable<HabitLog, 'id'>
   quizzes: EntityTable<QuizResult, 'id'>
   topicLog: EntityTable<TopicChange, 'id'>
+  reviewLog: EntityTable<ReviewLog, 'id'>
+  rewards: EntityTable<Reward, 'key'>
+  freezeLog: EntityTable<FreezeDay, 'date'>
 }
 
 db.version(1).stores({
@@ -98,6 +110,11 @@ db.version(8).stores({
 })
 db.version(9).stores({
   topicLog: '++id, subjectId, date',
+})
+db.version(10).stores({
+  reviewLog: '++id, date, subjectId',
+  rewards: '&key, date',
+  freezeLog: '&date',
 })
 // Record every rating change, whichever screen makes it
 db.topics.hook('updating', (mods, key, obj) => {

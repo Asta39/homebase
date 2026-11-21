@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { HashRouter, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import {
-  House, CalendarDays, BookOpen, CalendarRange, Timer, ChartColumn, Dumbbell, HeartPulse, UtensilsCrossed, Settings as SettingsIcon, Tv,
+  House, CalendarDays, Trophy, BookOpen, CalendarRange, Timer, ChartColumn, Dumbbell, HeartPulse, UtensilsCrossed, Settings as SettingsIcon, Tv,
   type LucideIcon,
 } from 'lucide-react'
 import { getSetting, seedIfEmpty } from './lib/db'
@@ -10,6 +10,7 @@ import { startTicker } from './lib/focus'
 import { DialogHost } from './components/Dialog'
 import MiniTimer from './components/MiniTimer'
 import QuickAdd from './components/QuickAdd'
+import GameEngine from "./components/GameEngine"
 import Thinking from './components/Thinking'
 import Wallpaper from './components/Wallpaper'
 import PageScatter from "./components/PageScatter"
@@ -28,10 +29,11 @@ const Meals = lazy(() => import('./pages/Meals'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Kiosk = lazy(() => import('./pages/Kiosk'))
 const Welcome = lazy(() => import('./pages/Welcome'))
+const Trophies = lazy(() => import('./pages/Trophies'))
 
 type Item = { to: string; label: string; icon: LucideIcon }
 const NAV: { heading?: string; items: Item[] }[] = [
-  { items: [{ to: '/', label: 'Home', icon: House }, { to: '/calendar', label: 'Calendar', icon: CalendarDays }] },
+  { items: [{ to: '/', label: 'Home', icon: House }, { to: '/calendar', label: 'Calendar', icon: CalendarDays }, { to: '/trophies', label: 'Trophies', icon: Trophy }] },
   { heading: 'Study', items: [
     { to: '/study', label: 'Subjects', icon: BookOpen }, { to: '/planner', label: 'Planner', icon: CalendarRange },
     { to: '/focus', label: 'Focus', icon: Timer }, { to: '/report', label: 'Report', icon: ChartColumn },
@@ -110,6 +112,7 @@ function Shell() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/trophies" element={<Trophies />} />
             <Route path="/study" element={<Study />} />
             <Route path="/study/:id" element={<Subject />} />
             <Route path="/planner" element={<Planner />} />
@@ -146,6 +149,7 @@ export default function App() {
     <HashRouter>
       <FirstRun />
       <KioskController />
+      <GameEngine />
       <Shell />
       <QuickAdd />
       <DialogHost />

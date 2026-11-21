@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { createEmptyCard, fsrs, Rating, type Card, type Grade } from 'ts-fsrs'
 import { db } from '../lib/db'
+import { ymd } from '../lib/workout'
 import { extractText } from '../lib/extract'
 import { confirmBox, notify } from '../components/Dialog'
 import NoteSearch from '../components/NoteSearch'
@@ -69,6 +70,7 @@ export default function Subject() {
     const card: Card = c.fsrs ? JSON.parse(c.fsrs) : createEmptyCard()
     const next = scheduler.next({ ...card, due: new Date(card.due) }, new Date(), g).card
     await db.flashcards.update(c.id!, { fsrs: JSON.stringify(next), due: next.due.toISOString() })
+    await db.reviewLog.add({ date: ymd(new Date()), subjectId: id, grade: g })
     if (g === Rating.Again) await db.confusions.add({ subjectId: id, text: `${c.front} → ${c.back}`, source: 'card', createdAt: new Date().toISOString() })
     setFlip(false)
   }
