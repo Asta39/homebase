@@ -53,11 +53,18 @@ export default function Calendar() {
   }
 
   return (
-    <div className="panel p-4 h-[calc(100vh-7.5rem)] min-h-[520px]">
+    <div className="panel ios-cal p-4 sm:p-5 h-[calc(100vh-7.5rem)] min-h-[520px]">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
         headerToolbar={{ left: 'prev,next today', center: 'title', right: 'timeGridDay,timeGridWeek,dayGridMonth' }}
+        buttonText={{ today: 'Today', day: 'Day', week: 'Week', month: 'Month' }}
+        dayHeaderContent={a => a.view.type === 'dayGridMonth'
+          ? <span className="ios-dh-w">{a.date.toLocaleDateString([], { weekday: 'short' })}</span>
+          : <div className={`ios-dh ${[0, 6].includes(a.date.getDay()) ? 'is-wkend' : ''}`}><span className="ios-dh-w">{a.date.toLocaleDateString([], { weekday: 'short' })}</span><span className="ios-dh-d">{a.date.getDate()}</span></div>}
+        allDayText="all-day" slotLabelFormat={{ hour: 'numeric', meridiem: 'short' }} dayMaxEvents={3}
+        eventContent={a => <div className="ios-ev" style={{ '--ev': a.event.backgroundColor } as React.CSSProperties}>
+          {a.timeText && !a.event.allDay && <div className="ios-ev-t">{a.timeText}</div>}<div className="ios-ev-n">{a.event.title}</div></div>}
         height="100%" nowIndicator editable selectable selectMirror firstDay={1}
         slotMinTime="06:00:00" scrollTime="07:00:00"
         events={events.map(e => ({ id: String(e.id), title: e.title, start: e.start, end: e.end, allDay: e.allDay, backgroundColor: color(e.subjectId) }))}

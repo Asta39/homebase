@@ -34,13 +34,58 @@ main h1 { font-size: 30px !important; font-weight: 700 !important; letter-spacin
 aside { background: color-mix(in srgb, var(--glass) 70%, transparent); backdrop-filter: blur(30px) saturate(160%); -webkit-backdrop-filter: blur(30px) saturate(160%); }
 
 /* FullCalendar → Apple Calendar look */
-.fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-neutral-bg-color: transparent; --fc-today-bg-color: color-mix(in srgb, #f97316 9%, transparent); }
-.fc .fc-col-header-cell-cushion, .fc .fc-timegrid-slot-label-cushion { color: var(--muted); font-weight: 500; }
-.fc .fc-toolbar-title { font-size: 1.4rem; font-weight: 700; }
-.fc .fc-button { background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 8px; text-transform: capitalize; }
-.fc .fc-button-active, .fc .fc-button:hover { background: var(--line) !important; color: var(--text) !important; }
-.fc-event { border-radius: 6px; border: none; padding: 1px 4px; font-size: .78rem; }
-.fc .fc-timegrid-now-indicator-line { border-color: #ff3b30; }
+/* ── Calendar: iOS Calendar look — plain surface, system red for dates & controls ── */
+.ios-cal { --ios-red: #ff3b30; --ios-bg: #ffffff; --ios-text: #1c1c1e; --ios-muted: #8e8e93; --ios-line: rgba(60,60,67,.14);
+  background: var(--ios-bg) !important; color: var(--ios-text); border-color: var(--ios-line) !important; }
+[data-mode="dark"] .ios-cal { --ios-red: #ff453a; --ios-bg: #1c1c1e; --ios-text: #f2f2f7; --ios-muted: #98989f; --ios-line: rgba(84,84,88,.45); }
+.fc { --fc-border-color: var(--ios-line, var(--line)); --fc-page-bg-color: transparent; --fc-neutral-bg-color: transparent; --fc-today-bg-color: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif; }
+.fc .fc-scrollgrid, .fc-theme-standard td, .fc-theme-standard th { border-color: var(--ios-line); }
+.fc .fc-scrollgrid { border-left: 0; border-right: 0; }
+.fc .fc-toolbar.fc-header-toolbar { margin-bottom: 1rem; }
+.fc .fc-toolbar-title { font-size: 1.75rem; font-weight: 700; letter-spacing: -.02em; color: var(--ios-text); }
+.fc .fc-button { background: transparent !important; color: var(--ios-red) !important; border: 0 !important; box-shadow: none !important;
+  font-weight: 500; font-size: .95rem; text-transform: capitalize; padding: .35rem .6rem; border-radius: 8px; }
+.fc .fc-button:hover { background: color-mix(in srgb, var(--ios-red) 10%, transparent) !important; }
+.fc .fc-button:disabled { opacity: .35; }
+/* Day/Week/Month as an iOS segmented control */
+.fc .fc-toolbar-chunk:last-child .fc-button-group { background: color-mix(in srgb, var(--ios-muted) 18%, transparent); padding: 2px; border-radius: 9px; }
+.fc .fc-toolbar-chunk:last-child .fc-button { color: var(--ios-text) !important; font-size: .82rem; font-weight: 600; padding: .3rem .9rem; border-radius: 7px !important; }
+.fc .fc-toolbar-chunk:last-child .fc-button-active { background: var(--ios-bg) !important; box-shadow: 0 1px 4px rgba(0,0,0,.14) !important; }
+.fc .fc-today-button { font-weight: 600 !important; }
+/* Headers: small grey weekday, big date number, today = red circle */
+.fc .fc-col-header-cell { border: 0; padding: .3rem 0 .5rem; }
+.fc .fc-col-header-cell-cushion { color: var(--ios-muted); font-weight: 500; text-decoration: none !important; }
+.ios-dh { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ios-dh-w { font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ios-muted); }
+.ios-dh-d { font-size: 1.2rem; font-weight: 500; color: var(--ios-text); width: 2rem; height: 2rem; display: grid; place-items: center; border-radius: 999px; }
+.ios-dh.is-wkend .ios-dh-d { color: var(--ios-muted); }
+.fc .fc-day-today .ios-dh-w { color: var(--ios-red); }
+.fc .fc-day-today .ios-dh-d { background: var(--ios-red); color: #fff; font-weight: 600; }
+/* Month grid numbers */
+.fc .fc-daygrid-day-top { flex-direction: row; justify-content: center; }
+.fc .fc-daygrid-day-number { color: var(--ios-text); font-size: .95rem; font-weight: 500; text-decoration: none !important; width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border-radius: 999px; margin-top: 4px; padding: 0; }
+.fc .fc-day-other .fc-daygrid-day-number { color: var(--ios-muted); opacity: .6; }
+.fc .fc-day-today .fc-daygrid-day-number { background: var(--ios-red); color: #fff; font-weight: 600; }
+.fc .fc-daygrid-day { border-left: 0; border-right: 0; }
+/* Time grid */
+.fc .fc-timegrid-slot { height: 2.6rem; border-bottom: 0; }
+.fc .fc-timegrid-slot-minor { border-top-color: transparent; }
+.fc .fc-timegrid-slot-label-cushion, .fc .fc-timegrid-axis-cushion { color: var(--ios-muted); font-size: .7rem; font-weight: 500; }
+.fc .fc-timegrid-slot-label { vertical-align: top; border: 0; transform: translateY(-.55em); }
+.fc .fc-timegrid-axis { border: 0; }
+.fc .fc-timegrid-now-indicator-line { border-color: var(--ios-red); border-width: 1.5px 0 0; }
+.fc .fc-timegrid-now-indicator-arrow { border: 0; width: 8px; height: 8px; border-radius: 99px; background: var(--ios-red); margin-top: -4px; left: auto; right: -4px; }
+/* Events: tinted block with a coloured left bar, like iOS */
+.fc-event, .fc-event:hover { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.fc-timegrid-event .fc-event-main, .fc-daygrid-event .fc-event-main { padding: 0 !important; }
+.ios-ev { height: 100%; overflow: hidden; border-radius: 6px; padding: 3px 6px; border-left: 3px solid var(--ev);
+  background: color-mix(in srgb, var(--ev) 22%, var(--ios-bg)); color: color-mix(in srgb, var(--ev) 62%, var(--ios-text)); font-size: .76rem; line-height: 1.25; }
+.ios-ev-n { font-weight: 600; }
+.ios-ev-t { font-size: .68rem; opacity: .8; }
+.fc-daygrid-event .ios-ev { height: auto; padding: 1px 6px; }
+.fc-daygrid-event .ios-ev-t { display: none; }
+.fc .fc-highlight { background: color-mix(in srgb, var(--ios-red) 10%, transparent); }
 
 /* AI revision sheets (rendered Markdown) */
 .prose-sheet { line-height: 1.6; }
