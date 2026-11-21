@@ -12,20 +12,22 @@ export type ThemeId = 'classic' | 'glam' | 'kitty' | 'blue'
 export type Deco = { src: string; alt: string }
 export type Theme = { id: ThemeId; name: string; tagline: string; preview: string; wall?: string; darkByDefault?: boolean; decos: Deco[] }
 
-const set = (dir: string, files: string[]): Deco[] => files.map(f => ({ src: `/themes/${dir}/${f}.png`, alt: f.replace(/-/g, ' ') }))
+// Asset paths respect Vite's base, so the same code works at / (desktop app) and /homebase/ (GitHub Pages)
+const A = (path: string) => `${import.meta.env.BASE_URL}${path}`
+const set = (dir: string, files: string[]): Deco[] => files.map(f => ({ src: A(`themes/${dir}/${f}.png`), alt: f.replace(/-/g, ' ') }))
 
 export const THEMES: Theme[] = [
   { id: 'classic', name: 'Classic', tagline: 'Calm and focused', preview: '', decos: [] },
   {
-    id: 'glam', name: 'Cherry Glam', tagline: 'Leopard, cherries & red lips', preview: '/themes/glam/wall.jpg', wall: '/themes/glam/wall.jpg', darkByDefault: true,
+    id: 'glam', name: 'Cherry Glam', tagline: 'Leopard, cherries & red lips', preview: A('themes/glam/wall.jpg'), wall: A('themes/glam/wall.jpg'), darkByDefault: true,
     decos: set('glam', ['cherries', 'bow', 'star', 'kiss', 'eightball', 'leopard-kiss', 'bolt', 'red-bow', 'glitter-star', 'rose', 'perfume', 'heart']),
   },
   {
-    id: 'kitty', name: 'Kitty', tagline: 'Pink leopard, bows & lace', preview: '/themes/kitty/wall.jpg', wall: '/themes/kitty/wall.jpg',
+    id: 'kitty', name: 'Kitty', tagline: 'Pink leopard, bows & lace', preview: A('themes/kitty/wall.jpg'), wall: A('themes/kitty/wall.jpg'),
     decos: set('kitty', ['cherries', 'bow', 'star', 'lace-heart', 'kitten', 'leopard-bow', 'butterfly', 'disco', 'shell', 'macaron', 'flower', 'heart']),
   },
   {
-    id: 'blue', name: 'Midnight Blue', tagline: 'Blue leopard, flowers & ocean', preview: '/themes/blue/wall.jpg', wall: '/themes/blue/wall.jpg', darkByDefault: true,
+    id: 'blue', name: 'Midnight Blue', tagline: 'Blue leopard, flowers & ocean', preview: A('themes/blue/wall.jpg'), wall: A('themes/blue/wall.jpg'), darkByDefault: true,
     decos: set('blue', ['leopard-bow', 'navy-bow', 'glitter-star', 'kiss', 'ball', 'turtle', 'disco', 'shell', 'starfish', 'flower', 'butterfly', 'jellyfish']),
   },
 ]
