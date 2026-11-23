@@ -189,6 +189,97 @@ aside { background: color-mix(in srgb, var(--glass) 70%, transparent); backdrop-
 :root[data-mode="light"][data-theme="blue"] .wall-image::after { background: linear-gradient(180deg, rgba(10,20,50,.10), rgba(10,20,50,.26)); }
 :root[data-mode="light"][data-theme="blue"] aside { background: rgba(210, 222, 246, .80); }
 
+/* ---------- starry: cards tinted from the painting ---------- */
+[data-theme="starry"] { --accent: #f2b632; }
+:root[data-mode="dark"][data-theme="starry"] {
+  --bg: #120d16; --panel: rgb(30, 20, 34); --text: #fbf3e2; --muted: #c9b99e; --line: rgba(255, 215, 140, 0.12);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(255, 215, 140, 0.16);
+  --glass: rgba(30, 20, 34, 0.8); --glass-line: rgba(255, 215, 140, 0.16); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .5);
+  --accent: #f2b632;
+}
+:root[data-mode="dark"][data-theme="starry"] .wall-image::after { background: linear-gradient(180deg, rgba(20, 10, 24, 0.35), rgba(20, 10, 24, 0.55)); }
+:root[data-mode="dark"][data-theme="starry"] aside { background: rgba(30, 20, 34, 0.86); }
+:root[data-mode="light"][data-theme="starry"] {
+  --text: #2a1d10; --muted: #6e5a3c; --line: rgba(20, 10, 24, 0.14);
+  --field: rgba(255, 250, 240, .55); --field-line: rgba(20, 10, 24, 0.18);
+  --glass: rgba(246, 232, 200, 0.8); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(20, 10, 24, 0.3);
+  --accent: #b9780b;
+}
+:root[data-mode="light"][data-theme="starry"] .wall-image::after { background: linear-gradient(180deg, rgba(20, 10, 24, 0.1), rgba(20, 10, 24, 0.26)); }
+:root[data-mode="light"][data-theme="starry"] aside { background: rgba(246, 232, 200, 0.84); }
+/* ---------- peace: cards tinted from the painting ---------- */
+[data-theme="peace"] { --accent: #ff8a1f; }
+:root[data-mode="dark"][data-theme="peace"] {
+  --bg: #160a03; --panel: rgb(36, 16, 6); --text: #fff1e3; --muted: #d8b393; --line: rgba(255, 190, 130, 0.12);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(255, 190, 130, 0.16);
+  --glass: rgba(36, 16, 6, 0.8); --glass-line: rgba(255, 190, 130, 0.16); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .5);
+  --accent: #ff8a1f;
+}
+:root[data-mode="dark"][data-theme="peace"] .wall-image::after { background: linear-gradient(180deg, rgba(30, 10, 0, 0.35), rgba(30, 10, 0, 0.55)); }
+:root[data-mode="dark"][data-theme="peace"] aside { background: rgba(36, 16, 6, 0.86); }
+:root[data-mode="light"][data-theme="peace"] {
+  --text: #2e1504; --muted: #7a4a26; --line: rgba(30, 10, 0, 0.14);
+  --field: rgba(255, 250, 240, .55); --field-line: rgba(30, 10, 0, 0.18);
+  --glass: rgba(255, 226, 196, 0.8); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(30, 10, 0, 0.3);
+  --accent: #d35f00;
+}
+:root[data-mode="light"][data-theme="peace"] .wall-image::after { background: linear-gradient(180deg, rgba(30, 10, 0, 0.1), rgba(30, 10, 0, 0.26)); }
+:root[data-mode="light"][data-theme="peace"] aside { background: rgba(255, 226, 196, 0.84); }
+/* ---------- ember: cards tinted from the painting ---------- */
+[data-theme="ember"] { --accent: #ff5a3c; }
+:root[data-mode="dark"][data-theme="ember"] {
+  --bg: #140604; --panel: rgb(34, 12, 10); --text: #fdeee6; --muted: #d6a99a; --line: rgba(255, 170, 140, 0.12);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(255, 170, 140, 0.16);
+  --glass: rgba(34, 12, 10, 0.8); --glass-line: rgba(255, 170, 140, 0.16); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .5);
+  --accent: #ff5a3c;
+}
+:root[data-mode="dark"][data-theme="ember"] .wall-image::after { background: linear-gradient(180deg, rgba(26, 6, 4, 0.35), rgba(26, 6, 4, 0.55)); }
+:root[data-mode="dark"][data-theme="ember"] aside { background: rgba(34, 12, 10, 0.86); }
+:root[data-mode="light"][data-theme="ember"] {
+  --text: #2c0e08; --muted: #7a4234; --line: rgba(26, 6, 4, 0.14);
+  --field: rgba(255, 250, 240, .55); --field-line: rgba(26, 6, 4, 0.18);
+  --glass: rgba(250, 220, 206, 0.8); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(26, 6, 4, 0.3);
+  --accent: #d23a1e;
+}
+:root[data-mode="light"][data-theme="ember"] .wall-image::after { background: linear-gradient(180deg, rgba(26, 6, 4, 0.1), rgba(26, 6, 4, 0.26)); }
+:root[data-mode="light"][data-theme="ember"] aside { background: rgba(250, 220, 206, 0.84); }
+/* ---------- forest: cards tinted from the painting ---------- */
+[data-theme="forest"] { --accent: #d4af5a; }
+:root[data-mode="dark"][data-theme="forest"] {
+  --bg: #0b0f0a; --panel: rgb(16, 22, 15); --text: #f1eedd; --muted: #b7b49a; --line: rgba(220, 210, 150, 0.12);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(220, 210, 150, 0.16);
+  --glass: rgba(16, 22, 15, 0.8); --glass-line: rgba(220, 210, 150, 0.16); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .5);
+  --accent: #d4af5a;
+}
+:root[data-mode="dark"][data-theme="forest"] .wall-image::after { background: linear-gradient(180deg, rgba(6, 10, 6, 0.35), rgba(6, 10, 6, 0.55)); }
+:root[data-mode="dark"][data-theme="forest"] aside { background: rgba(16, 22, 15, 0.86); }
+:root[data-mode="light"][data-theme="forest"] {
+  --text: #1a2014; --muted: #5b5d45; --line: rgba(6, 10, 6, 0.14);
+  --field: rgba(255, 250, 240, .55); --field-line: rgba(6, 10, 6, 0.18);
+  --glass: rgba(230, 226, 200, 0.8); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(6, 10, 6, 0.3);
+  --accent: #8a6d1f;
+}
+:root[data-mode="light"][data-theme="forest"] .wall-image::after { background: linear-gradient(180deg, rgba(6, 10, 6, 0.1), rgba(6, 10, 6, 0.26)); }
+:root[data-mode="light"][data-theme="forest"] aside { background: rgba(230, 226, 200, 0.84); }
+/* ---------- flutter: cards tinted from the painting ---------- */
+[data-theme="flutter"] { --accent: #ffb020; }
+:root[data-mode="dark"][data-theme="flutter"] {
+  --bg: #170604; --panel: rgb(40, 12, 8); --text: #fff2e0; --muted: #dcb08f; --line: rgba(255, 190, 110, 0.12);
+  --field: rgba(0, 0, 0, .30); --field-line: rgba(255, 190, 110, 0.16);
+  --glass: rgba(40, 12, 8, 0.8); --glass-line: rgba(255, 190, 110, 0.16); --glass-shadow: 0 10px 34px rgba(0, 0, 0, .5);
+  --accent: #ffb020;
+}
+:root[data-mode="dark"][data-theme="flutter"] .wall-image::after { background: linear-gradient(180deg, rgba(30, 6, 2, 0.35), rgba(30, 6, 2, 0.55)); }
+:root[data-mode="dark"][data-theme="flutter"] aside { background: rgba(40, 12, 8, 0.86); }
+:root[data-mode="light"][data-theme="flutter"] {
+  --text: #30100a; --muted: #7d4a2c; --line: rgba(30, 6, 2, 0.14);
+  --field: rgba(255, 250, 240, .55); --field-line: rgba(30, 6, 2, 0.18);
+  --glass: rgba(252, 222, 190, 0.8); --glass-line: rgba(255, 255, 255, .55); --glass-shadow: 0 10px 34px rgba(30, 6, 2, 0.3);
+  --accent: #c66a00;
+}
+:root[data-mode="light"][data-theme="flutter"] .wall-image::after { background: linear-gradient(180deg, rgba(30, 6, 2, 0.1), rgba(30, 6, 2, 0.26)); }
+:root[data-mode="light"][data-theme="flutter"] aside { background: rgba(252, 222, 190, 0.84); }
+
 /* ---------- Page decorations (playful themes) ----------
    Cut-outs on cards across every page, drawn from the theme's 12 objects (--d0…--d11).
    Every 3rd card gets one on its top edge, every 4th one at the bottom, cycling through objects and corners,

@@ -7,7 +7,7 @@
 import { useSyncExternalStore } from 'react'
 import { setSetting } from './db'
 
-export type ThemeId = 'classic' | 'glam' | 'kitty' | 'blue'
+export type ThemeId = 'classic' | 'glam' | 'kitty' | 'blue' | 'starry' | 'peace' | 'ember' | 'forest' | 'flutter'
 
 export type Deco = { src: string; alt: string }
 export type Theme = { id: ThemeId; name: string; tagline: string; preview: string; wall?: string; darkByDefault?: boolean; decos: Deco[] }
@@ -30,6 +30,11 @@ export const THEMES: Theme[] = [
     id: 'blue', name: 'Midnight Blue', tagline: 'Blue leopard, flowers & ocean', preview: A('themes/blue/wall.jpg'), wall: A('themes/blue/wall.jpg'), darkByDefault: true,
     decos: set('blue', ['leopard-bow', 'navy-bow', 'glitter-star', 'kiss', 'ball', 'turtle', 'disco', 'shell', 'starfish', 'flower', 'butterfly', 'jellyfish']),
   },
+  { id: 'starry', name: 'Starry Night', tagline: 'Swirling gold skies', preview: A('themes/starry/preview.jpg'), wall: A('themes/starry/wall.jpg'), darkByDefault: true, decos: [] },
+  { id: 'peace', name: 'Peace of Mind', tagline: 'Warm orange calm', preview: A('themes/peace/preview.jpg'), wall: A('themes/peace/wall.jpg'), darkByDefault: true, decos: [] },
+  { id: 'ember', name: 'Ember Bloom', tagline: 'Red-gold flowers & stars', preview: A('themes/ember/preview.jpg'), wall: A('themes/ember/wall.jpg'), darkByDefault: true, decos: [] },
+  { id: 'forest', name: 'Enchanted Forest', tagline: 'Misty pines & gold filigree', preview: A('themes/forest/preview.jpg'), wall: A('themes/forest/wall.jpg'), darkByDefault: true, decos: [] },
+  { id: 'flutter', name: 'Autumn Flutter', tagline: 'Butterflies in red & gold', preview: A('themes/flutter/preview.jpg'), wall: A('themes/flutter/wall.jpg'), darkByDefault: true, decos: [] },
 ]
 
 const KEY = 'homebase.theme'
